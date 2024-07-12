@@ -167,6 +167,8 @@ namespace Tounaent_Fixtures.Controllers
                     return "13player";
                 case 14:
                     return "14player";
+                case 16:
+                    return "16player";
                 default:
                     return "Index";
             }
