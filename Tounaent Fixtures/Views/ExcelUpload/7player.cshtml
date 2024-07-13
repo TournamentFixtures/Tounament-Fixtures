@@ -87,10 +87,10 @@
         min-width: 3px;
     }
 </style>
-<h2>3 NATIONAL OPEN KYORUGI AND POOMSAE TAEKWONDO CHAMPIONSI</h2>
-<h3>21st TO 23rd JUNE 2024</h3>
-<h3>MAHATMA GANDHI INDOOR STADIUM, SALEM, TAMIL NADU</h3>
-<h3>SUB-JUNIOR BOYS UNDER 23Kg</h3>
+<h3 style="text-align: center;">3 NATIONAL OPEN KYORUGI AND POOMSAE TAEKWONDO CHAMPIONSHIPS: 2024</h2>
+<p style="text-align: center;">21st TO 23rd JUNE 2024</p>
+<p style="text-align: center;">MAHATMA GANDHI INDOOR STADIUM, SALEM, TAMIL NADU</p>
+<h3 style="text-align: center;">SUB-JUNIOR BOYS UNDER 23Kg</h3>
 <body>
     <div class="chart-row">
         <div class="chart-tno">T.No</div>
@@ -177,5 +177,13 @@
         <div class="chart-state">@ViewBag.students[6].Team</div>
         <div class="chart-line-h"></div>
     </div>
+    <button onclick="printDocument()">Print Document</button>
+
+    <!-- JavaScript function to handle printing -->
+    <script>
+        function printDocument() {
+            window.print();
+        }
+    </script>
 </body>
 </html>

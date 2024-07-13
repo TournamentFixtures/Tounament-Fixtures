@@ -6,7 +6,10 @@
 <style>
     body {
         font: 16px/1.4 sans-serif;
-    }
+            transform: scale(0.8); /* Scale down to 80% of the original size */
+            transform-origin: top left; /* Set the origin of scaling */
+            width: 125%; /* Adjust width to compensate for scaling */
+        }
 
     .chart-col {
         display: flex;
@@ -87,10 +90,10 @@
         min-width: 3px;
     }
 </style>
-<h2>3 NATIONAL OPEN KYORUGI AND POOMSAE TAEKWONDO CHAMPIONSI</h2>
-<h3>21st TO 23rd JUNE 2024</h3>
-<h3>MAHATMA GANDHI INDOOR STADIUM, SALEM, TAMIL NADU</h3>
-<h3>SUB-JUNIOR BOYS UNDER 23Kg</h3>
+<h3 style="text-align: center;">3 NATIONAL OPEN KYORUGI AND POOMSAE TAEKWONDO CHAMPIONSHIPS: 2024</h2>
+<p style="text-align: center;">21st TO 23rd JUNE 2024</p>
+<p style="text-align: center;">MAHATMA GANDHI INDOOR STADIUM, SALEM, TAMIL NADU</p>
+<h3 style="text-align: center;">SUB-JUNIOR BOYS UNDER 23Kg</h3>
 <body>
     <div class="chart-row">
         <div class="chart-tno">T.No</div>
@@ -123,7 +126,7 @@
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
-        <div style="margin-left: 800px;">1</div>
+        <div style="margin-left: 788px;">1</div>
         <div class="chart-line-v" ></div>
         <div class="chart-line-h"></div>
     </div>
@@ -158,7 +161,7 @@
       <div class="chart-line-h"></div>
   </div>
   <div class="chart-row">
-      <div style="margin-left: 800px;">2</div>
+      <div style="margin-left: 788px;">2</div>
       <div class="chart-line-v" ></div>
       <div class="chart-line-h"></div>
   </div>
@@ -192,7 +195,7 @@
     <div class="chart-line-h"></div>
 </div>
 <div class="chart-row">
-    <div style="margin-left: 800px;">3</div>
+    <div style="margin-left: 788px;">3</div>
     <div class="chart-line-v" ></div>
     <div class="chart-line-h"></div>
 </div>
@@ -214,7 +217,7 @@
     <div class="chart-line-h"></div>
 </div>
 <div class="chart-row">
-    <div style="margin-left: 800px;">4</div>
+    <div style="margin-left: 788px;">4</div>
     <div class="chart-line-v"></div>
     <div class="chart-line-h"></div>
 </div>
@@ -237,7 +240,7 @@
 
 </div>
 <div class="chart-row">
-    <div style="margin-left: 800px;">5</div>
+    <div style="margin-left: 788px;">5</div>
     <div class="chart-line-v"></div>
     <div class="chart-line-h"></div>
 </div>
@@ -247,5 +250,13 @@
     <div class="chart-state">@ViewBag.students[12].Team</div>
     <div class="chart-line-h"></div>
 </div>
+<button onclick="printDocument()">Print Document</button>
+
+    <!-- JavaScript function to handle printing -->
+    <script>
+        function printDocument() {
+            window.print();
+        }
+    </script>
 </body>
 </html>

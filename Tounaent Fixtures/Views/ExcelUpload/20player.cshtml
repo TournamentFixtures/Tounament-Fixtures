@@ -1,15 +1,16 @@
 ﻿@model dynamic
 @{
     ViewData["Title"] = "Tournament Bracket";
+        var shuffledStudents = @ViewBag.students;
 }
 <html>
-<style>
-       body {
+     <div id="content-to-print">
+    
+         <style>
+           
+    body {
         font: 16px/1.4 sans-serif;
-            transform: scale(0.8); /* Scale down to 80% of the original size */
-            transform-origin: top left; /* Set the origin of scaling */
-            width: 125%; /* Adjust width to compensate for scaling */
-        }
+    }
 
     .chart-col {
         display: flex;
@@ -89,17 +90,21 @@
         background-color: #000000;
         min-width: 3px;
     }
-</style>
+
+         </style>
 <h3 style="text-align: center;">3 NATIONAL OPEN KYORUGI AND POOMSAE TAEKWONDO CHAMPIONSHIPS: 2024</h2>
 <p style="text-align: center;">21st TO 23rd JUNE 2024</p>
 <p style="text-align: center;">MAHATMA GANDHI INDOOR STADIUM, SALEM, TAMIL NADU</p>
 <h3 style="text-align: center;">SUB-JUNIOR BOYS UNDER 23Kg</h3>
 <body>
+   
     <div class="chart-row">
         <div class="chart-tno">T.No</div>
         <div class="chart-name">Name</div>
         <div class="chart-state">State</div>
         <div class="chart-round">R1</div>
+        <div class="chart-round">R2</div>
+        <div class="chart-round">R3</div>
         <div class="chart-round">SF</div>
         <div class="chart-final">Final</div>
 
@@ -114,8 +119,8 @@
 
     </div>
     <div class="chart-row">
-        <div style="margin-left: 836px;">7</div>
-        <div class="chart-line-v" style="margin-bottom: -45px;"></div>
+        <div style="margin-left: 836px;">5</div>
+        <div class="chart-line-v"></div>
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
@@ -123,10 +128,11 @@
         <div class="chart-name">@ViewBag.students[1].StudentName</div>
         <div class="chart-state">@ViewBag.students[1].Team</div>
         <div class="chart-line-h"></div>
+        <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
-        <div style="margin-left: 788px;">1</div>
-        <div class="chart-line-v" ></div>
+        <div style="margin-left: 876px;">13</div>
+        <div class="chart-line-v" style="margin-top: -34px; margin-bottom: -95px;"></div>
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
@@ -136,9 +142,9 @@
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
-      <div style="margin-left: 876px;">11</div>
-      <div class="chart-line-v" style="margin-top: -84px; margin-bottom: -96px;"></div>
-      <div class="chart-line-h"></div>
+        <div style="margin-left: 790px;">1</div>
+        <div class="chart-line-v"></div>
+        <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
         <div class="chart-tno">4.</div>
@@ -147,8 +153,8 @@
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
-        <div style="margin-left: 788px;">2</div>
-        <div class="chart-line-v"></div>
+        <div style="margin-left: 836px;">6</div>
+        <div class="chart-line-v" style=" margin-top: -34px;"></div>
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
@@ -156,22 +162,24 @@
         <div class="chart-name">@ViewBag.students[4].StudentName</div>
         <div class="chart-state">@ViewBag.students[4].Team</div>
         <div class="chart-line-h"></div>
+        <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
-        <div style="margin-left: 836px;">8</div>
-        <div class="chart-line-v" style="margin-top: -34px; margin-bottom: -46px;"></div>
+        <div style="margin-left: 925px;">17</div>
+        <div class="chart-line-v" style="margin-top: -134px; margin-bottom: -146px;"></div>
         <div class="chart-line-h"></div>
-</div>
+    </div>
     <div class="chart-row">
         <div class="chart-tno">6.</div>
         <div class="chart-name">@ViewBag.students[5].StudentName</div>
         <div class="chart-state">@ViewBag.students[5].Team</div>
         <div class="chart-line-h"></div>
+        <div class="chart-line-h"></div>
 
     </div>
     <div class="chart-row">
-        <div style="margin-left: 788px;">3</div>
-        <div class="chart-line-v"></div>
+        <div style="margin-left: 836px;">7</div>
+        <div class="chart-line-v" style=" margin-bottom: -45px;"></div>
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
@@ -179,23 +187,23 @@
         <div class="chart-name">@ViewBag.students[6].StudentName</div>
         <div class="chart-state">@ViewBag.students[6].Team</div>
         <div class="chart-line-h"></div>
+
     </div>
     <div class="chart-row">
-      <div style="margin-left: 926px;">13</div>
-      <div class="chart-line-v" style="margin-bottom: -145px; margin-top: -184px;"></div>
-      <div class="chart-line-h"></div>
+        <div style="margin-left: 790px;">2</div>
+        <div class="chart-line-v"></div>
+        <div class="chart-line-h"></div>
     </div>
-      <div class="chart-row">
+    <div class="chart-row">
         <div class="chart-tno">8.</div>
         <div class="chart-name">@ViewBag.students[7].StudentName</div>
         <div class="chart-state">@ViewBag.students[7].Team</div>
         <div class="chart-line-h"></div>
-        <div class="chart-line-h"></div>
 
     </div>
     <div class="chart-row">
-        <div style="margin-left: 836px;">9</div>
-        <div class="chart-line-v" style="margin-bottom: -45px;"></div>
+        <div style="margin-left: 876px;">14</div>
+        <div class="chart-line-v" style="margin-top: -83px; margin-bottom: -45px;"></div>
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
@@ -203,10 +211,11 @@
         <div class="chart-name">@ViewBag.students[8].StudentName</div>
         <div class="chart-state">@ViewBag.students[8].Team</div>
         <div class="chart-line-h"></div>
+        <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
-        <div style="margin-left: 788px;">4</div>
-        <div class="chart-line-v" ></div>
+        <div style="margin-left: 836px;">8</div>
+        <div class="chart-line-v" style=" margin-bottom: -18px;"></div>
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
@@ -214,20 +223,23 @@
         <div class="chart-name">@ViewBag.students[9].StudentName</div>
         <div class="chart-state">@ViewBag.students[9].Team</div>
         <div class="chart-line-h"></div>
+        <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
-      <div style="margin-left: 876px;">12</div>
-      <div class="chart-line-v" style="margin-top: -84px; margin-bottom: -96px;"></div>
-      <div class="chart-line-h"></div>
+        <div style="margin-left: 975px;">19</div>
+        <div class="chart-line-v" style="margin-top: -234px; margin-bottom: -246px;"></div>
+        <div class="chart-line-h"></div>
     </div>
-    <div class="chart-row">
+        <div class="chart-row">
         <div class="chart-tno">11.</div>
         <div class="chart-name">@ViewBag.students[10].StudentName</div>
         <div class="chart-state">@ViewBag.students[10].Team</div>
         <div class="chart-line-h"></div>
+        <div class="chart-line-h"></div>
+
     </div>
     <div class="chart-row">
-        <div style="margin-left: 788px;">5</div>
+        <div style="margin-left: 836px;">9</div>
         <div class="chart-line-v"></div>
         <div class="chart-line-h"></div>
     </div>
@@ -236,21 +248,21 @@
         <div class="chart-name">@ViewBag.students[11].StudentName</div>
         <div class="chart-state">@ViewBag.students[11].Team</div>
         <div class="chart-line-h"></div>
+        <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
-        <div style="margin-left: 826px;">10</div>
-        <div class="chart-line-v" style="margin-top: -34px; margin-bottom: -46px;"></div>
+        <div style="margin-left: 876px;">15</div>
+        <div class="chart-line-v" style="margin-top: -34px; margin-bottom: -95px;"></div>
         <div class="chart-line-h"></div>
-</div>
+    </div>
     <div class="chart-row">
         <div class="chart-tno">13.</div>
         <div class="chart-name">@ViewBag.students[12].StudentName</div>
         <div class="chart-state">@ViewBag.students[12].Team</div>
         <div class="chart-line-h"></div>
-
     </div>
     <div class="chart-row">
-        <div style="margin-left: 788px;">6</div>
+        <div style="margin-left: 790px;">3</div>
         <div class="chart-line-v"></div>
         <div class="chart-line-h"></div>
     </div>
@@ -258,6 +270,79 @@
         <div class="chart-tno">14.</div>
         <div class="chart-name">@ViewBag.students[13].StudentName</div>
         <div class="chart-state">@ViewBag.students[13].Team</div>
+        <div class="chart-line-h"></div>
+    </div>
+    <div class="chart-row">
+        <div style="margin-left: 826px;">10</div>
+        <div class="chart-line-v" style=" margin-top: -34px;"></div>
+        <div class="chart-line-h"></div>
+    </div>
+    <div class="chart-row">
+        <div class="chart-tno">15.</div>
+        <div class="chart-name">@ViewBag.students[14].StudentName</div>
+        <div class="chart-state">@ViewBag.students[14].Team</div>
+        <div class="chart-line-h"></div>
+        <div class="chart-line-h"></div>
+    </div>
+    <div class="chart-row">
+        <div style="margin-left: 925px;">18</div>
+        <div class="chart-line-v" style="margin-top: -134px; margin-bottom: -146px;"></div>
+        <div class="chart-line-h"></div>
+    </div>
+    <div class="chart-row">
+        <div class="chart-tno">16.</div>
+        <div class="chart-name">@ViewBag.students[15].StudentName</div>
+        <div class="chart-state">@ViewBag.students[15].Team</div>
+        <div class="chart-line-h"></div>
+        <div class="chart-line-h"></div>
+
+    </div>
+    <div class="chart-row">
+        <div style="margin-left: 830px;">11</div>
+        <div class="chart-line-v" style=" margin-bottom: -45px;"></div>
+        <div class="chart-line-h"></div>
+    </div>
+    <div class="chart-row">
+        <div class="chart-tno">17.</div>
+        <div class="chart-name">@ViewBag.students[16].StudentName</div>
+        <div class="chart-state">@ViewBag.students[16].Team</div>
+        <div class="chart-line-h"></div>
+
+    </div>
+    <div class="chart-row">
+        <div style="margin-left: 790px;">4</div>
+        <div class="chart-line-v"></div>
+        <div class="chart-line-h"></div>
+    </div>
+    <div class="chart-row">
+        <div class="chart-tno">18.</div>
+        <div class="chart-name">@ViewBag.students[17].StudentName</div>
+        <div class="chart-state">@ViewBag.students[17].Team</div>
+        <div class="chart-line-h"></div>
+
+    </div>
+    <div class="chart-row">
+        <div style="margin-left: 876px;">16</div>
+        <div class="chart-line-v" style="margin-top: -83px; margin-bottom: -45px;"></div>
+        <div class="chart-line-h"></div>
+    </div>
+    <div class="chart-row">
+        <div class="chart-tno">19.</div>
+        <div class="chart-name">@ViewBag.students[18].StudentName</div>
+        <div class="chart-state">@ViewBag.students[18].Team</div>
+        <div class="chart-line-h"></div>
+        <div class="chart-line-h"></div>
+    </div>
+    <div class="chart-row">
+        <div style="margin-left: 826px;">12</div>
+        <div class="chart-line-v" style=" margin-bottom: -18px;"></div>
+        <div class="chart-line-h"></div>
+    </div>
+    <div class="chart-row">
+        <div class="chart-tno">20.</div>
+        <div class="chart-name">@ViewBag.students[19].StudentName</div>
+        <div class="chart-state">@ViewBag.students[19].Team</div>
+        <div class="chart-line-h"></div>
         <div class="chart-line-h"></div>
     </div>
     <button onclick="printDocument()">Print Document</button>
@@ -269,4 +354,5 @@
         }
     </script>
 </body>
+    </div>
 </html>

@@ -35,14 +35,15 @@ namespace Tounaent_Fixtures.Controllers
                 return View("Index");
             }
 
-            string filePath = Path.Combine("C:\\Users\\xches\\Downloads", file.FileName);
+            string filePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + Path.GetExtension(file.FileName));
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
+                // Copy the uploaded file to the temporary location
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
 
-            List<ExcelData> data = new List<ExcelData>();
+                List<ExcelData> data = new List<ExcelData>();
 
             try
             {
@@ -167,66 +168,20 @@ namespace Tounaent_Fixtures.Controllers
                     return "13player";
                 case 14:
                     return "14player";
+                case 15:
+                    return "15player";
                 case 16:
                     return "16player";
+                case 17:
+                    return "17player";
+                case 18:
+                    return "18player";
+                case 19:
+                    return "19player";
+                case 20:
+                    return "20player";
                 default:
                     return "Index";
-            }
-        }
-        public IActionResult GeneratePdfFromHtml(string htmlContent)
-        {
-            var globalSettings = new GlobalSettings
-            {
-                ColorMode = ColorMode.Color,
-                Orientation = Orientation.Landscape,
-                PaperSize = PaperKind.A2,
-            };
-
-            var objectSettings = new ObjectSettings
-            {
-                HtmlContent = htmlContent,
-            };
-
-            var pdf = new HtmlToPdfDocument()
-            {
-                GlobalSettings = globalSettings,
-                Objects = { objectSettings }
-            };
-
-            var file = _pdfConverter.Convert(pdf);
-
-            return File(file, "application/pdf");
-        }
-        private async Task<string> RenderViewToStringAsync(string viewName, object model)
-        {
-            var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
-            var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
-
-            using (var sw = new StringWriter())
-            {
-                var viewResult = _razorViewEngine.FindView(actionContext, viewName, false);
-
-                if (viewResult.View == null)
-                {
-                    throw new ArgumentNullException($"View {viewName} was not found.");
-                }
-
-                var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
-                {
-                    Model = model
-                };
-
-                var viewContext = new ViewContext(
-                    actionContext,
-                    viewResult.View,
-                    viewDictionary,
-                    new TempDataDictionary(actionContext.HttpContext, (ITempDataProvider)TempData),
-                    sw,
-                    new HtmlHelperOptions()
-                );
-
-                await viewResult.View.RenderAsync(viewContext);
-                return sw.ToString();
             }
         }
     }
