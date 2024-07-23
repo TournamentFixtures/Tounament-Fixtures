@@ -25,6 +25,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ExcelUpload" asp-action="Index">Upload</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <form id="logoutForm" asp-controller="Auth" asp-action="Logout" method="post">
+                                    <button type="submit" class="btn btn-link nav-link">Logout</button>
+                                    @Html.AntiForgeryToken()
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Auth" asp-action="Login">Login</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

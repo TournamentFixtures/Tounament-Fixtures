@@ -1,28 +1,13 @@
 ﻿using ClosedXML.Excel;
-using DinkToPdf;
-using DinkToPdf.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
 
 namespace Tounaent_Fixtures.Controllers
 {
+    [Authorize]
     public class ExcelUploadController : Controller
     {
-        private readonly IConverter _converter;
-        private readonly IRazorViewEngine _razorViewEngine;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IConverter _pdfConverter;
-
-        public ExcelUploadController(IConverter pdfConverter)
-        {
-            _pdfConverter = pdfConverter;
-        }
-
         public IActionResult Index()
         {
             return View();
