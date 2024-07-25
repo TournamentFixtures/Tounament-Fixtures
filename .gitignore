@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /Tounaent Fixtures/web.config
 /Tounaent Fixtures/.config/dotnet-tools.json
+/Tounaent Fixtures/Properties/ServiceDependencies/TournamentFixutres - Web Deploy/profile.arm.json
+/Tounaent Fixtures/Properties/ServiceDependencies/TournamentFixutres - Zip Deploy/profile.arm.json

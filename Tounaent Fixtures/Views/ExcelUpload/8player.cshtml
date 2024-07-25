@@ -79,11 +79,69 @@
 
       min-width: 3px;
     }
+       
+        .header-section {
+        position: relative;
+        overflow: hidden; /* This ensures the container wraps around floated elements */
+    }
+
+    .test1 img {
+        float: left;
+        max-width:50%;
+        margin-top:55px;
+    }
+        .test2 img {
+        float: right;
+        max-width:50%;
+        transform: scale(0.6);
+        margin-bottom: -80px;
+        margin-top: -30px;
+    }
+
+    .center-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    /* Additional styling for the text (adjust as needed) */
+    .center-text h3 {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .center-text p {
+        font-size: 14px;
+        margin: 8px 0;
+    }
+    .footer {
+        display: flex;
+        justify-content: space-between;
+    }
+    .lastdiv {
+        max-width:350px;
+        margin-right: 150px;
+    }
     </style>
-<h3 style="text-align: center;">3 NATIONAL OPEN KYORUGI AND POOMSAE TAEKWONDO CHAMPIONSHIPS: 2024</h2>
-<p style="text-align: center;">21st TO 23rd JUNE 2024</p>
-<p style="text-align: center;">MAHATMA GANDHI INDOOR STADIUM, SALEM, TAMIL NADU</p>
-<h3 style="text-align: center;">SUB-JUNIOR BOYS UNDER 23Kg</h3>
+    <div class="header-section">
+        <div class="test1" >
+    <img src="~/images/1.jpg" alt="Image 1" />
+    </div>
+    <div class="center-text">
+        <h3>33rd SALEM DISTRICT TAEKWONDO CHAMPIONSHIP - 2024</h3>
+        <p>Organized by: Mettur Amateur Taekwondo Sports Club</p>
+        <p>Affiliated by: Salem District Amateur Taekwondo Association</p>
+        <p>Promoted by: Tamil Nadu Taekwondo Association</p>
+        <p>Recognized by: Tamil Nadu State Olympics Association</p>
+        <p>Sports Development Authority of Tamil Nadu</p>
+        <h3>@ViewBag.heading</h3>
+    </div>
+    <div class="test2">
+    <img  src="~/images/2.jpg" alt="Image 2" />
+    </div>
+</div>
 <body>
     <div class="chart-row">
         <div class="chart-tno">T.No</div>
@@ -191,4 +249,24 @@
         }
     </script>
 </body>
+<p> </p>
+<p>
+    <div class="footer">
+       <div><h5>Court Incharge</h5></div>
+    <div><h5>Technical Incharge</h5></div>
+    <div><h5>Organising Secretary</h5></div>
+    <div><h5>Observer</h5></div>
+    <div class="lastdiv">
+        <h5>
+        General Secretary</h5>
+        <p>
+        Master.P.Selvamani,MA.,8th DAN</p>
+        <p>International Referee,</p>
+        <p>Salem Dt.Amature Taekwondo Association,</p>
+        <p>Tamil Nadu Taekwondo Association.,</p>
+        <p>Chairman., Technical Committee-TFI</p>
+    </div>
+</div>
+</p>
+    </div>
 </html>
