@@ -8,6 +8,8 @@ namespace Tounaent_Fixtures.Controllers
     [Authorize]
     public class ExcelUploadController : Controller
     {
+        public string? heading;
+        public string? subheading;
         public IActionResult Index()
         {
             return View();
@@ -36,7 +38,7 @@ namespace Tounaent_Fixtures.Controllers
                 {
                     var worksheet = workbook.Worksheet(1);
 
-                    var headersRow = worksheet.Row(2);
+                    var headersRow = worksheet.Row(3);
                     var nameColumn = GetColumnIndex(headersRow, "Student Name");
                     var teamColumn = GetColumnIndex(headersRow, "Team");
                     var heightColumn = GetColumnIndex(headersRow, "Height");
@@ -44,7 +46,7 @@ namespace Tounaent_Fixtures.Controllers
                     var snoColumn = GetColumnIndex(headersRow, "S.No");
                     var dobColumn = GetColumnIndex(headersRow, "DOB");
 
-                    foreach (var row in worksheet.RowsUsed().Skip(2))
+                    foreach (var row in worksheet.RowsUsed().Skip(3))
                     {
                         if (row.Cell(snoColumn)?.Value != null)
                         {
@@ -59,12 +61,11 @@ namespace Tounaent_Fixtures.Controllers
                             });
                         }
                     }
-                    foreach(var row in worksheet.RowsUsed())
-                    {
-                        TempData["Heading"] = row.Cell(1).Value.ToString();
-                        break;
+                    HttpContext.Session.SetString("Heading", worksheet.Row(1).Cell(1)?.Value.ToString());
+                    HttpContext.Session.SetString("SubHeading", worksheet.Row(2).Cell(1)?.Value.ToString());
 
-                    }
+                    //TempData["Heading"] = 
+                    //TempData["SubHeading"] = ;
                 }
 
                 var teamGroups = data.GroupBy(s => s.Team)
@@ -118,10 +119,11 @@ namespace Tounaent_Fixtures.Controllers
             if (!string.IsNullOrEmpty(viewName))
             {
                 var shuffledStudentsJson = TempData["ShuffledStudents"] as string;
-                var heading = TempData["Heading"] as string;
                 var shuffledStudents = JsonConvert.DeserializeObject<List<ExcelData>>(shuffledStudentsJson);
                 ViewBag.students=shuffledStudents;
-                ViewBag.heading=heading;
+                ViewBag.Heading = HttpContext.Session.GetString("Heading");
+                ViewBag.SubHeading = HttpContext.Session.GetString("SubHeading");
+                ViewBag.datetime = DateTime.Now;
                 return View(viewName, shuffledStudents);
             }
             else

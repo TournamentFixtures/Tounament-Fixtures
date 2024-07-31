@@ -4,6 +4,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add session services
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.HttpOnly = true; // Make the session cookie HTTP only
+    options.Cookie.IsEssential = true; // Make the session cookie essential
+});
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
@@ -11,7 +20,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Optional: set a session timeout
                     options.SlidingExpiration = true; // Optional: refresh cookie expiration on each request
                 });
-
 
 var app = builder.Build();
 
@@ -27,13 +35,17 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+// Use session
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Auth}/{action=Login}/{id?}");
+
 app.MapControllerRoute(
     name: "home",
     pattern: "{controller=Home}/{action=Index}/{id?}");
