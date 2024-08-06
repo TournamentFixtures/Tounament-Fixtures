@@ -1,117 +1,126 @@
 ﻿@model dynamic
 @{
     ViewData["Title"] = "Tournament Bracket";
+    ViewData["HideNavigation"] = true;
 }
 <html>
-  <style>body {font: 16px/1.4 sans-serif;}
-
-    .chart-col {
-      display: flex;
-      gap: 1em;
-    }
-    
+  <style>
+              @@media print {
+    body{
+        size: A4 portrait;
+        /* change the margins as you want them to be. */
+   } 
+}
+    body {
+        flex: auto;
+        font-size: 15pt;
+        font-family: "Times New Roman", Times, serif;        
+        margin-bottom:0px;
+        transform: scale(0.8);
+        transform-origin: top left;
+        }
     .chart-row {
-      display: flex;
-      gap: 1px;
-      flex-direction: row;
+        display: -webkit-box;
+        gap: 1px;
+        flex-direction: row;
     }
-    
-    .chart-col {
-      flex-direction: column;
-    }
-    
-    .chart-tno{
-      padding: 1px;
-      text-align: left;
-      border: 2px solid #000000;
-      width: 50px;
-      margin: auto 0;
-      background: #ffffff;
-    }
-    .chart-name{
-      padding: 1px;
-      text-align: left;
-      border: 2px solid #000000;
-      width: 400px;
-      margin: auto 0;
-      background: #ffffff;
-    }
-    .chart-state{
-      padding: 1px;
-      text-align: left;
-      border: 2px solid #000000;
-      width:300px;
-      margin: auto 0;
-      background: #ffffff;
-    }
-    .chart-round{
-      padding: 1px;
-      text-align: left;
-      border: 2px solid #000000;
-      width: 50px;
-      margin: auto 0;
-      background: #ffffff;
-    }
-    .chart-final{
-      padding: 1px;
-      text-align: left;
-      border: 2px solid #000000;
-      width: 200px;
-      margin: auto 0;
-      background: #ffffff;
-    }
-    
-    .chart-line-h {
-      margin-left: -1px;
-      margin-right: 0px;
-      height: 2px;
-      min-width: 3em;
-      width: 10px;
-      background: #000000;
-      margin-top: 1em;
-    }
-    .chart-line-v {
-    margin-top: -11px;
-    margin-bottom: -18px;
-    padding-top: 25px;
-    padding-bottom: -5px;
-    background-color: #000000;
 
-      min-width: 3px;
+    .chart-tno {
+        padding: 1px;
+        text-align: left;
+        border: 2px solid #000000;
+        width: 7%;
+        margin: 0 0;
+        background: #ffffff;
     }
-           
-        .header-section {
+
+    .chart-name {
+        padding: 1px;
+        text-align: left;
+        border: 2px solid #000000;
+        width: 47%;
+        margin: 0 0;
+        background: #ffffff;
+    }
+
+    .chart-state {
+        padding: 1px;
+        text-align: left;
+        border: 2px solid #000000;
+        width: 35%;
+        margin: 0 0;
+        background: #ffffff;
+    }
+
+    .chart-round {
+        padding: 1px;
+        text-align: left;
+        border: 2px solid #000000;
+        width: 6%;
+        margin: auto 0;
+        background: #ffffff;
+    }
+
+    .chart-final {
+        padding: 1px;
+        text-align: left;
+        border: 2px solid #000000;
+        width: 15%;
+        margin: auto 0;
+        background: #ffffff;
+    }
+
+    .chart-line-h {
+        margin-left: -1px;
+        margin-right: 0px;
+        height: 2px;
+        width: 6%;
+        background: #000000;
+        margin-top: 1em;
+    }
+
+    .chart-line-v {
+        margin-top: -15px;
+        margin-bottom: -20px;
+        padding-top: 25px;
+        padding-bottom: -5px;
+        background-color: #000000;
+        min-width: 3px;
+    }   
+           .header-section {
+                transform: scale(0.9);
+        transform-origin: top left;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         position: relative;
-        overflow: hidden; /* This ensures the container wraps around floated elements */
     }
 
     .test1 img {
-        float: left;
-        max-width:50%;
-        margin-top:55px;
+        max-width: 50%;
+        margin-top: 5%;
     }
-        .test2 img {
-        float: right;
-        max-width:50%;
+
+    .test2 img {
+        max-width: 50%;
         transform: scale(0.6);
-        margin-bottom: -80px;
-        margin-top: -30px;
+        margin-left: 160%;
+        margin-top: -2%;
     }
 
     .center-text {
         position: absolute;
         top: 50%;
-        left: 50%;
+        left: 75%;
         transform: translate(-50%, -50%);
         text-align: center;
+        width: 100%; /* Ensure the center text takes up full width for centering */
     }
 
-    /* Additional styling for the text (adjust as needed) */
     .center-text h3 {
         font-size: 24px;
         font-weight: bold;
     }
-
     .center-text p {
         font-size: 14px;
         margin: 8px 0;
@@ -119,27 +128,22 @@
     .footer {
         display: flex;
         justify-content: space-between;
+        width: 100%
     }
     .lastdiv {
-        max-width:350px;
-        margin-right: 150px;
+        line-height: 0.5;
+       
     }
-    </style>
+    </style>     
+
     <div class="header-section">
         <div class="test1" >
     <img src="~/images/1.jpg" alt="Image 1" />
     </div>
     <div class="center-text">
-        <h3>33rd SALEM DISTRICT TAEKWONDO CHAMPIONSHIP - 2024</h3>
-        <p>Organized by: Mettur Amateur Taekwondo Sports Club</p>
-        <p>Affiliated by: Salem District Amateur Taekwondo Association</p>
-        <p>Promoted by: Tamil Nadu Taekwondo Association</p>
-        <p>Recognized by: Tamil Nadu State Olympics Association</p>
-        <p>Sports Development Authority of Tamil Nadu</p>
         <h3>@ViewBag.heading</h3>
-    </div>
-    <div class="test2">
-    <img  src="~/images/2.jpg" alt="Image 2" />
+        <h4>@ViewBag.datetime</h4>
+        <h3>@ViewBag.subheading</h3>
     </div>
 </div>
 <body>
@@ -160,7 +164,7 @@
 
     </div>
     <div class="chart-row">
-        <div style="margin-left: 836px;">1</div>
+        <div style="margin-left: 100%;">1</div>
         <div class="chart-line-v"></div>
         <div class="chart-line-h"></div>
     </div>
@@ -171,33 +175,13 @@
         <div class="chart-line-h"></div>
         <div class="chart-line-h"></div>
     </div>
-    <button onclick="printDocument()">Print Document</button>
-
-    <!-- JavaScript function to handle printing -->
-    <script>
-        function printDocument() {
-            window.print();
-        }
-    </script>
-</body>
+     </body>
 <p> </p>
 <p>
     <div class="footer">
        <div><h5>Court Incharge</h5></div>
-    <div><h5>Technical Incharge</h5></div>
-    <div><h5>Organising Secretary</h5></div>
-    <div><h5>Observer</h5></div>
-    <div class="lastdiv">
-        <h5>
-        General Secretary</h5>
-        <p>
-        Master.P.Selvamani,MA.,8th DAN</p>
-        <p>International Referee,</p>
-        <p>Salem Dt.Amature Taekwondo Association,</p>
-        <p>Tamil Nadu Taekwondo Association.,</p>
-        <p>Chairman., Technical Committee-TFI</p>
+    
     </div>
 </div>
 </p>
-    </div>
 </html>
