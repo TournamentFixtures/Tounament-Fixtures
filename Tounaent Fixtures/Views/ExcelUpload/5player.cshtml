@@ -128,11 +128,10 @@
     .footer {
         display: flex;
         justify-content: space-between;
-        width: 100%
-    }
-    .lastdiv {
-        line-height: 0.5;
-       
+        width: 120%;
+        padding-top: 20px;
+            border-top: 1px solid #ffffff;
+            margin-top: 20px;
     }
     </style>     
 
@@ -150,7 +149,7 @@
     <div class="chart-row">
         <div class="chart-tno">T.No</div>
         <div class="chart-name">Name</div>
-        <div class="chart-state">State</div>
+        <div class="chart-state">@ViewBag.Team</div>
         <div class="chart-round">R1</div>
         <div class="chart-round">SF</div>
         <div class="chart-final">Final</div>
@@ -214,10 +213,10 @@
      </body>
 <p> </p>
 <p>
-    <div class="footer">
-       <div><h5>Court Incharge</h5></div>
-    
-    </div>
+   <footer class="footer">
+           <h5>Court Incharge</h5>
+               <h5>Organisation Authority</h5>
+           </footer>
 </div>
 </p>
 </html>

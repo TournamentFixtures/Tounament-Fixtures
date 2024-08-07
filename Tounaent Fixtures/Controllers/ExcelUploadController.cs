@@ -38,7 +38,7 @@ namespace Tounaent_Fixtures.Controllers
                 {
                     var worksheet = workbook.Worksheet(1);
 
-                    var headersRow = worksheet.Row(3);
+                    var headersRow = worksheet.Row(4);
                     var nameColumn = GetColumnIndex(headersRow, "Student Name");
                     var teamColumn = GetColumnIndex(headersRow, "Team");
                     var heightColumn = GetColumnIndex(headersRow, "Height");
@@ -46,7 +46,7 @@ namespace Tounaent_Fixtures.Controllers
                     var snoColumn = GetColumnIndex(headersRow, "S.No");
                     var dobColumn = GetColumnIndex(headersRow, "DOB");
 
-                    foreach (var row in worksheet.RowsUsed().Skip(3))
+                    foreach (var row in worksheet.RowsUsed().Skip(4))
                     {
                         if (row.Cell(snoColumn)?.Value != null)
                         {
@@ -62,7 +62,9 @@ namespace Tounaent_Fixtures.Controllers
                         }
                     }
                     HttpContext.Session.SetString("Heading", worksheet.Row(1).Cell(1)?.Value.ToString());
-                    HttpContext.Session.SetString("SubHeading", worksheet.Row(2).Cell(1)?.Value.ToString());
+                    HttpContext.Session.SetString("SubHeading", worksheet.Row(3).Cell(1)?.Value.ToString());
+                    HttpContext.Session.SetString("DateTime", worksheet.Row(2).Cell(1)?.Value.ToString());
+                    HttpContext.Session.SetString("Team", worksheet.Row(4).Cell(3)?.Value.ToString()); //check
 
                     //TempData["Heading"] = 
                     //TempData["SubHeading"] = ;
@@ -123,7 +125,8 @@ namespace Tounaent_Fixtures.Controllers
                 ViewBag.students=shuffledStudents;
                 ViewBag.Heading = HttpContext.Session.GetString("Heading");
                 ViewBag.SubHeading = HttpContext.Session.GetString("SubHeading");
-                ViewBag.datetime = DateTime.Now;
+                ViewBag.datetime = HttpContext.Session.GetString("DateTime");
+                ViewBag.Team = HttpContext.Session.GetString("Team");
                 return View(viewName, shuffledStudents);
             }
             else

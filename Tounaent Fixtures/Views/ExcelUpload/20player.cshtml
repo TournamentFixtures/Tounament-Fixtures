@@ -15,7 +15,7 @@
 }
     body {
         flex: auto;
-        font-size: 12.4pt;
+        font-size: 11.5pt;
         font-family: "Times New Roman", Times, serif;        
         transform: scale(0.8);
         transform-origin: top left;
@@ -83,7 +83,7 @@
 
     .chart-line-v {
         margin-top: -13px;
-        margin-bottom: -19px;
+        margin-bottom: -18px;
         padding-top: 25px;
         padding-bottom: -5px;
         background-color: #000000;
@@ -130,7 +130,10 @@
     .footer {
         display: flex;
         justify-content: space-between;
-        width: 100%
+        width: 120%;
+        padding-top: 20px;
+            border-top: 1px solid #ffffff;
+            margin-top: 20px;
     }
     </style>
 
@@ -149,7 +152,7 @@
     <div class="chart-row">
         <div class="chart-tno">T.No</div>
         <div class="chart-name">Name</div>
-        <div class="chart-state">State</div>
+        <div class="chart-state">@ViewBag.Team</div>
         <div class="chart-round">R1</div>
         <div class="chart-round">R2</div>
         <div class="chart-round">R3</div>
@@ -180,7 +183,7 @@
     </div>
     <div class="chart-row">
         <div style="margin-left: 105%;">13</div>
-        <div class="chart-line-v" style="margin-top: -38px; margin-bottom: -103px;"></div>
+        <div class="chart-line-v" style="margin-top: -34px; margin-bottom: -95px;"></div>
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
@@ -214,7 +217,7 @@
     </div>
     <div class="chart-row">
         <div style="margin-left: 111%;">17</div>
-        <div class="chart-line-v" style="margin-top: -148px; margin-bottom: -158px;"></div>
+        <div class="chart-line-v" style="margin-top: -138px; margin-bottom: -148px;"></div>
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
@@ -251,7 +254,7 @@
     </div>
     <div class="chart-row">
         <div style="margin-left: 105%;">14</div>
-        <div class="chart-line-v" style="margin-top: -93px; margin-bottom: -47px;"></div>
+        <div class="chart-line-v" style="margin-top: -85px; margin-bottom: -47px;"></div>
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
@@ -275,7 +278,7 @@
     </div>
     <div class="chart-row">
         <div style="margin-left: 117%;">19</div>
-        <div class="chart-line-v" style="margin-top: -256px; margin-bottom: -268px;"></div>
+        <div class="chart-line-v" style="margin-top: -240px; margin-bottom: -250px;"></div>
         <div class="chart-line-h"></div>
     </div>
         <div class="chart-row">
@@ -300,7 +303,7 @@
     </div>
     <div class="chart-row">
         <div style="margin-left: 105%;">15</div>
-        <div class="chart-line-v" style="margin-top: -36px; margin-bottom: -103px;"></div>
+        <div class="chart-line-v" style="margin-top: -36px; margin-bottom: -95px;"></div>
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
@@ -334,7 +337,7 @@
     </div>
     <div class="chart-row">
         <div style="margin-left: 111%;">18</div>
-        <div class="chart-line-v" style="margin-top: -147px; margin-bottom: -158px;"></div>
+        <div class="chart-line-v" style="margin-top: -137px; margin-bottom: -148px;"></div>
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
@@ -371,7 +374,7 @@
     </div>
     <div class="chart-row">
         <div style="margin-left: 105%;">16</div>
-        <div class="chart-line-v" style="margin-top: -93px; margin-bottom: -47px;"></div>
+        <div class="chart-line-v" style="margin-top: -87px; margin-bottom: -47px;"></div>
         <div class="chart-line-h"></div>
     </div>
     <div class="chart-row">
@@ -394,10 +397,10 @@
         <div class="chart-line-h"></div>
     </div>
     <p>
-    <div class="footer">
-       <div><h5>Court Incharge</h5></div>
-    
-    </div>
+    <footer class="footer">
+           <h5>Court Incharge</h5>
+               <h5>Organisation Authority</h5>
+           </footer>
 </div>
 </p>
 </body>
