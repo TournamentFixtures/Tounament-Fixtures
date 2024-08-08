@@ -37,37 +37,60 @@ namespace Tounaent_Fixtures.Controllers
                 using (var workbook = new XLWorkbook(filePath))
                 {
                     var worksheet = workbook.Worksheet(1);
-
                     var headersRow = worksheet.Row(4);
-                    var nameColumn = GetColumnIndex(headersRow, "Student Name");
-                    var teamColumn = GetColumnIndex(headersRow, "Team");
-                    var heightColumn = GetColumnIndex(headersRow, "Height");
-                    var weightColumn = GetColumnIndex(headersRow, "Weight");
-                    var snoColumn = GetColumnIndex(headersRow, "S.No");
-                    var dobColumn = GetColumnIndex(headersRow, "DOB");
 
+                    // Get required column indices
+                    var requiredColumns = new Dictionary<string, int>
+                    {
+                        { "Student Name", GetColumnIndex(headersRow, "Student Name") },
+                        { "Team", GetColumnIndex(headersRow, "Team") },
+                        { "Height", GetColumnIndex(headersRow, "Height") },
+                        { "Weight", GetColumnIndex(headersRow, "Weight") },
+                        { "S.No", GetColumnIndex(headersRow, "S.No") },
+                        { "DOB", GetColumnIndex(headersRow, "DOB") }
+                    };
+
+                    // Check if all required columns are found
+                    if (requiredColumns.Values.Any(colIndex => colIndex == -1))
+                    {
+                        ViewBag.Error = "One or more required columns are missing.";
+                        return View("Index");
+                    }
+
+                    // Process rows
                     foreach (var row in worksheet.RowsUsed().Skip(4))
                     {
-                        if (row.Cell(snoColumn)?.Value != null)
+                        if (row.Cell(requiredColumns["S.No"])?.Value != null)
                         {
                             data.Add(new ExcelData
                             {
-                                Sno = Convert.ToInt32(row.Cell(snoColumn)?.Value.ToString().Trim()),
-                                StudentName = row.Cell(nameColumn)?.Value.ToString().Trim(),
-                                Team = row.Cell(teamColumn)?.Value.ToString().Trim(),
-                                Height = row.Cell(heightColumn)?.Value.ToString().Trim(),
-                                Weight = Convert.ToInt32(row.Cell(weightColumn)?.Value.ToString().Trim()),
-                                //DOB = DateTime.ParseExact(row.Cell(dobColumn)?.Value.ToString().Trim(), "dd-MM-yy", null)
+                                Sno = Convert.ToInt32(row.Cell(requiredColumns["S.No"])?.Value.ToString().Trim()),
+                                StudentName = row.Cell(requiredColumns["Student Name"])?.Value.ToString().Trim(),
+                                Team = row.Cell(requiredColumns["Team"])?.Value.ToString().Trim(),
+                                Height = row.Cell(requiredColumns["Height"])?.Value.ToString().Trim(),
+                                Weight = Convert.ToInt32(row.Cell(requiredColumns["Weight"])?.Value.ToString().Trim()),
+                                // DOB = DateTime.ParseExact(row.Cell(requiredColumns["DOB"])?.Value.ToString().Trim(), "dd-MM-yy", null)
                             });
                         }
                     }
+
+
                     HttpContext.Session.SetString("Heading", worksheet.Row(1).Cell(1)?.Value.ToString());
                     HttpContext.Session.SetString("SubHeading", worksheet.Row(3).Cell(1)?.Value.ToString());
-                    HttpContext.Session.SetString("DateTime", worksheet.Row(2).Cell(1)?.Value.ToString());
-                    HttpContext.Session.SetString("Team", worksheet.Row(4).Cell(3)?.Value.ToString()); //check
+                    //HttpContext.Session.SetString("DateTime", worksheet.Row(2).Cell(1)?.Value.ToString());
+                    HttpContext.Session.SetString("Team", worksheet.Row(4).Cell(3)?.Value.ToString());
+                    string cellValueAsString;
+                    if (worksheet.Row(2).Cell(1)?.DataType == XLDataType.DateTime)
+                    {
+                        var dateValue = worksheet.Row(2).Cell(1)?.GetValue<DateTime>();
+                        cellValueAsString = dateValue.HasValue ? dateValue.Value.ToString("yyyy-MM-dd") : " ";
+                    }
+                    else
+                    {
+                        cellValueAsString = worksheet.Row(2).Cell(1)?.GetValue<string>();
+                    }
+                    HttpContext.Session.SetString("DateTime",cellValueAsString);
 
-                    //TempData["Heading"] = 
-                    //TempData["SubHeading"] = ;
                 }
 
                 var teamGroups = data.GroupBy(s => s.Team)
@@ -125,7 +148,7 @@ namespace Tounaent_Fixtures.Controllers
                 ViewBag.students=shuffledStudents;
                 ViewBag.Heading = HttpContext.Session.GetString("Heading");
                 ViewBag.SubHeading = HttpContext.Session.GetString("SubHeading");
-                ViewBag.datetime = HttpContext.Session.GetString("DateTime");
+                ViewBag.date = HttpContext.Session.GetString("DateTime");
                 ViewBag.Team = HttpContext.Session.GetString("Team");
                 return View(viewName, shuffledStudents);
             }
