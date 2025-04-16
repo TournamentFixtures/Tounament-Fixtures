@@ -12,6 +12,7 @@
     <PackageReference Include="DinkToPdf" Version="1.0.8" />
     <PackageReference Include="DinkToPdfCopyDependencies" Version="1.0.8" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
   </ItemGroup>
 
   <ItemGroup>

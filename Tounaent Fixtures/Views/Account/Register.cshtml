@@ -1,85 +1,200 @@
 ﻿@model RegisterViewModel
 
-<h2>Register</h2>
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">User Registration</h4>
+        </div>
+        <div class="card-body">
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-success">@TempData["Message"]</div>
+            }
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-success">@TempData["Message"]</div>
-}
-<form asp-action="Register" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Gender"></label>
-        <input asp-for="Gender" class="form-control" />
-        <span asp-validation-for="Gender" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Age"></label>
-        <input asp-for="Age" class="form-control" />
-        <span asp-validation-for="Age" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Aadhaar"></label>
-        <input asp-for="Aadhaar" class="form-control" />
-        <span asp-validation-for="Aadhaar" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Height"></label>
-        <input asp-for="Height" class="form-control" />
-        <span asp-validation-for="Height" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Weight"></label>
-        <input asp-for="Weight" class="form-control" />
-        <span asp-validation-for="Weight" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Address"></label>
-        <input asp-for="Address" class="form-control" />
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="PinCode"></label>
-        <input asp-for="PinCode" class="form-control" />
-        <span asp-validation-for="PinCode" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Phone"></label>
-        <input asp-for="Phone" class="form-control" />
-        <span asp-validation-for="Phone" class="text-danger"></span>
-    </div>
+            <form asp-action="Register" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <!-- Name -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Name"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <!-- Photo Upload -->
+                    <div class="col-md-6 d-flex align-items-center">
+                        <div class="form-group w-100 text-center">
+                            <label for="photoInput" style="cursor: pointer;">
+                                <i class="fas fa-upload fa-2x text-primary"></i>
+                                <div>Upload Photo</div>
+                            </label>
+                            <input asp-for="Photo" type="file" id="photoInput" accept="image/*"
+                                   style="display:none;" />
+                            <span asp-validation-for="Photo" class="text-danger"></span>
 
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
+                            <!-- Preview -->
+                            <div class="mt-3">
+                                <img id="photoPreview" src="#" alt="Preview"
+                                     style="display:none; max-height: 150px; border: 1px solid #ddd; padding: 5px;" />
+                            </div>
+                        </div>
+                    </div>
 
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="GenderId"></label>
+                        <select asp-for="GenderId" asp-items="Model.GenderOptions" class="form-control">
+                            <option value="">-- Select Gender --</option>
+                        </select>
+                        <span asp-validation-for="GenderId" class="text-danger"></span>
+                    </div>
 
-    <div class="form-group">
-        <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" type="password" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Photo">Upload Photo</label>
-        <input asp-for="Photo" type="file" class="form-control" />
-        <span asp-validation-for="Photo" class="text-danger"></span>
-    </div>
 
-    <button type="submit" class="btn btn-primary">Register</button>
-</form>
 
+                    <!-- Date of Birth -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="DateOfBirth"></label>
+                            <input asp-for="DateOfBirth" type="date" class="form-control" id="dob" />
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <input type="text" id="category" class="form-control" readonly />
+                        </div>
+                    </div>
+
+                    <!-- Aadhaar -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Aadhaar"></label>
+                            <input asp-for="Aadhaar" class="form-control" />
+                            <span asp-validation-for="Aadhaar" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Height -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Height"></label>
+                            <input asp-for="Height" class="form-control" />
+                            <span asp-validation-for="Height" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Weight -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Weight"></label>
+                            <input asp-for="Weight" class="form-control" />
+                            <span asp-validation-for="Weight" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Address"></label>
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- PinCode -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="PinCode"></label>
+                            <input asp-for="PinCode" class="form-control" />
+                            <span asp-validation-for="PinCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Phone"></label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Email"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Password"></label>
+                            <input asp-for="Password" type="password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="ConfirmPassword"></label>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-success">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Preview logic for image
+        document.getElementById('photoInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('photoPreview');
+
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+
+        // DOB -> Category logic
+        document.getElementById('dob').addEventListener('change', function() {
+            const dob = new Date(this.value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const m = today.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+
+            let category = '';
+            if (age < 12) category = 'Sub Junior';
+            else if (age >= 12 && age < 16) category = 'Junior';
+            else if (age >= 16 && age < 20) category = 'Cadet';
+            else category = 'Senior';
+
+            document.getElementById('category').value = category;
+        });
+    </script>
 }
