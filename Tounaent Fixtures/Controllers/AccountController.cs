@@ -1,25 +1,23 @@
-﻿using DinkToPdf;
-using DinkToPdf.Contracts;
-using Microsoft.AspNetCore.Mvc;
+﻿using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.IO;
-using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Mail;
-using System.Threading.Tasks;
+using System.Net;
+using DinkToPdf;
+using Tounaent_Fixtures.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class AccountController : Controller
 {
     private readonly IConfiguration _config;
     private readonly IConverter _converter;
+    private readonly ApplicationDbContext _context;
 
-    public AccountController(IConfiguration config, IConverter converter)
+    public AccountController(IConfiguration config, IConverter converter, ApplicationDbContext context)
     {
         _config = config;
         _converter = converter;
+        _context = context;
     }
 
     public async Task<IActionResult> Register()
@@ -37,9 +35,7 @@ public class AccountController : Controller
         model.GenderOptions = await GetGendersAsync();
 
         if (!ModelState.IsValid)
-        {
             return View(model);
-        }
 
         byte[] photoBytes = null;
         if (model.Photo != null && model.Photo.Length > 0)
@@ -49,11 +45,24 @@ public class AccountController : Controller
             photoBytes = ms.ToArray();
         }
 
-        // Set the Gender name based on the selected GenderId
-        model.Gender = model.GenderOptions
-            .FirstOrDefault(g => g.Value == model.GenderId?.ToString())?.Text;
+        var registration = new Registration
+        {
+            Name = model.Name,
+            GenderId = model.GenderId,
+            Dob = model.DateOfBirth,
+            Aadhaar = model.Aadhaar,
+            Height = model.Height,
+            Weight = model.Weight,
+            Address = model.Address,
+            PinCode = model.PinCode,
+            Phone = model.Phone,
+            Email = model.Email,
+            Photo = photoBytes,
+            CreatedDate = DateTime.Now
+        };
 
-        await SaveToDatabaseAsync(model, photoBytes);
+        _context.Registrations.Add(registration);
+        await _context.SaveChangesAsync();
 
         byte[] idCardPdf = GenerateIdCardPdf(model, photoBytes);
         await SendEmailAsync(model.Email, idCardPdf);
@@ -64,49 +73,16 @@ public class AccountController : Controller
 
     private async Task<List<SelectListItem>> GetGendersAsync()
     {
-        var list = new List<SelectListItem>();
-        var connectionString = _config.GetConnectionString("DefaultConnection");
-
-        using var conn = new SqlConnection(connectionString);
-        using var cmd = new SqlCommand("SELECT GenderId, GenderName FROM Gender", conn);
-        await conn.OpenAsync();
-        using var reader = await cmd.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
-        {
-            list.Add(new SelectListItem
+        return await _context.Gender
+            .Select(g => new SelectListItem
             {
-                Value = reader["GenderId"].ToString(),
-                Text = reader["GenderName"].ToString()
-            });
-        }
-        return list;
+                Value = g.GenderId.ToString(),
+                Text = g.GenderName
+            })
+            .ToListAsync();
     }
 
-    private async Task SaveToDatabaseAsync(RegisterViewModel model, byte[] photoBytes)
-    {
-        var connectionString = _config.GetConnectionString("DefaultConnection");
-        using var conn = new SqlConnection(connectionString);
-        using var cmd = new SqlCommand(@"
-            INSERT INTO Registration (Name, Gender, DOB, Aadhaar, Height, Weight, Address, PinCode, Phone, Email, Photo)
-            VALUES (@Name, @Gender, @DOB, @Aadhaar, @Height, @Weight, @Address, @PinCode, @Phone, @Email, @Photo)", conn);
-
-        cmd.Parameters.AddWithValue("@Name", model.Name);
-        cmd.Parameters.AddWithValue("@Gender", model.Gender);
-        cmd.Parameters.AddWithValue("@DOB", model.DateOfBirth);
-        cmd.Parameters.AddWithValue("@Aadhaar", model.Aadhaar);
-        cmd.Parameters.AddWithValue("@Height", model.Height);
-        cmd.Parameters.AddWithValue("@Weight", model.Weight);
-        cmd.Parameters.AddWithValue("@Address", model.Address);
-        cmd.Parameters.AddWithValue("@PinCode", model.PinCode);
-        cmd.Parameters.AddWithValue("@Phone", model.Phone);
-        cmd.Parameters.AddWithValue("@Email", model.Email);
-        cmd.Parameters.AddWithValue("@Photo", photoBytes ?? (object)DBNull.Value);
-
-        await conn.OpenAsync();
-        await cmd.ExecuteNonQueryAsync();
-    }
-
-    private byte[] GenerateIdCardPdf(RegisterViewModel model, byte[] photoBytes)
+private byte[] GenerateIdCardPdf(RegisterViewModel model, byte[] photoBytes)
     {
         string base64Image = photoBytes != null
             ? $"data:image/jpeg;base64,{Convert.ToBase64String(photoBytes)}"

@@ -1,12 +1,12 @@
-﻿//namespace Tounaent_Fixtures.Models
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
-
 
 public class RegisterViewModel
 {
     [Required, EmailAddress]
     public string Email { get; set; }
+
     [Required]
     public string Name { get; set; }
 
@@ -18,30 +18,31 @@ public class RegisterViewModel
 
     [Required(ErrorMessage = "Please select a gender")]
     [Display(Name = "Gender")]
-    public int? GenderId { get; set; }  // The selected gender ID
+    public int GenderId { get; set; }
 
-    public List<SelectListItem> GenderOptions { get; set; } = new(); // For the dropdown
+    public List<SelectListItem> GenderOptions { get; set; } = new();
 
-    public string Gender { get; set; }  // This can be used to display the name if needed
+    public string Gender => GenderId == 1 ? "Male" : GenderId == 2 ? "Female" : "Other";
 
     [DataType(DataType.Date)]
+    public DateTime DateOfBirth { get; set; } = DateTime.Today;
 
-    public DateTime DateOfBirth { get; set; } = DateTime.Today; 
     public string Category
     {
         get
         {
-            var today = DateTime.Today;
-            var age = today.Year - DateOfBirth.Year;
-            if (DateOfBirth.Date > today.AddYears(-age)) age--;
-
+            var age = Age;
             if (age < 12) return "Sub Junior";
-            if (age >= 12 && age < 16) return "Junior";
-            if (age >= 16 && age < 20) return "Cadet";
+            if (age < 16) return "Junior";
+            if (age < 20) return "Cadet";
             return "Senior";
         }
     }
-    public int Age { get; set; }
+
+    public int Age => DateOfBirth != default
+        ? (int)((DateTime.Today - DateOfBirth).TotalDays / 365.25)
+        : 0;
+
     public string Aadhaar { get; set; }
     public string Height { get; set; }
     public string Weight { get; set; }
@@ -49,7 +50,5 @@ public class RegisterViewModel
     public string PinCode { get; set; }
     public string Phone { get; set; }
 
-    public IFormFile Photo { get; set; } 
-
+    public IFormFile Photo { get; set; }
 }
-
