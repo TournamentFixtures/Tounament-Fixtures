@@ -1,0 +1,52 @@
+﻿@model TournamentViewModel
+
+@{
+    ViewData["Title"] = "Register Tournament";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Register" method="post">
+    <div class="form-group">
+        <label asp-for="TournamentName"></label>
+        <input asp-for="TournamentName" class="form-control" />
+        <span asp-validation-for="TournamentName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="OrganizedBy"></label>
+        <input asp-for="OrganizedBy" class="form-control" />
+        <span asp-validation-for="OrganizedBy" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Venue"></label>
+        <input asp-for="Venue" class="form-control" />
+        <span asp-validation-for="Venue" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="From_dt"></label>
+        <input asp-for="From_dt" class="form-control" type="date" />
+        <span asp-validation-for="From_dt" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="To_dt"></label>
+        <input asp-for="To_dt" class="form-control" type="date" />
+        <span asp-validation-for="To_dt" class="text-danger"></span>
+    </div>
+
+    <div class="form-group form-check">
+        <input asp-for="IsActive" class="form-check-input" />
+        <label asp-for="IsActive" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-success">Register Tournament</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

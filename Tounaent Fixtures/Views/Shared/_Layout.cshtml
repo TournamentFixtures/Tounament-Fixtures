@@ -28,6 +28,12 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="ExcelUpload" asp-action="Index">Upload</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">UserRegistration</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Tournament" asp-action="Register">TournamentRegistration</a>
+                            </li>
                             @if (User.Identity.IsAuthenticated)
                             {
                                 <li class="nav-item">
