@@ -20,6 +20,38 @@ namespace Tounaent_Fixtures.Controllers
             _context = context;
 
         }
+        public async Task<IActionResult> TournamentManagement()
+        {
+            var tournaments = await _context.TblTournament.ToListAsync();
+            return View(tournaments);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateTournament(int id, string name, string venue, bool isActive)
+        {
+            var tournament = await _context.TblTournament.FindAsync(id);
+            if (tournament == null)
+            {
+                return NotFound();
+            }
+
+            tournament.TournamentName = name;
+            tournament.Venue = venue;
+            tournament.IsActive = isActive;
+            tournament.ModifyDt = DateTime.Now;
+            tournament.ModifyBy = User.Identity?.Name ?? "admin";
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(new { success = true });
+            }
+            catch
+            {
+                return BadRequest("Could not update tournament");
+            }
+        }
+
 
         public IActionResult Index()
         {

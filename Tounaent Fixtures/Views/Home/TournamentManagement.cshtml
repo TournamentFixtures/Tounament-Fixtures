@@ -1,0 +1,60 @@
+﻿@model List<TblTournament>
+@{
+    ViewData["Title"] = "Tournament Management";
+}
+
+<h2>Tournament Management</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Venue</th>
+            <th>Is Active</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr data-id="@item.TournamentId">
+                <td class="name">@item.TournamentName</td>
+                <td class="venue">@item.Venue</td>
+                <td class="active">@item.IsActive</td>
+                <td>
+                    <button class="btn btn-sm btn-primary edit-btn">Edit</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', async function () {
+                const row = this.closest('tr');
+                const id = row.dataset.id;
+                const name = prompt("Enter tournament name:", row.querySelector('.name').innerText);
+                const venue = prompt("Enter venue:", row.querySelector('.venue').innerText);
+                const active = confirm("Is it active? (OK = Yes)");
+
+                const response = await fetch(`/Home/UpdateTournament`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                    },
+                    body: JSON.stringify({ id: id, name: name, venue: venue, isActive: active })
+                });
+
+                if (response.ok) {
+                    alert("Tournament updated!");
+                    location.reload();
+                } else {
+                    alert("Error updating tournament");
+                }
+            });
+        });
+    </script>
+}
