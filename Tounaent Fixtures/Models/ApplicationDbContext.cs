@@ -19,7 +19,7 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Registration> Registrations { get; set; }
 
-    public virtual DbSet<TblTournament> TblTournaments { get; set; }
+    public virtual DbSet<TblTournament> TblTournament { get; set; }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -28,6 +28,26 @@ public partial class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<TblTournament>(entity =>
+        {
+            entity.ToTable("Tbl_Tournament"); 
+
+            entity.HasKey(e => e.TournamentId);
+            entity.Property(e => e.TournamentId).ValueGeneratedOnAdd()
+            .HasColumnName("Tournament_Id"); 
+            entity.Property(e => e.FromDt)
+              .HasColumnName("From_dt");
+            entity.Property(e => e.AddedBy)
+              .HasColumnName("Added_by");
+            entity.Property(e => e.AddedDt)
+              .HasColumnName("Added_dt");
+            entity.Property(e => e.ModifyBy)
+              .HasColumnName("Modify_by");
+            entity.Property(e => e.ModifyDt)
+              .HasColumnName("Modify_dt");
+            entity.Property(e => e.ToDt)
+              .HasColumnName("To_dt");
+        });
         modelBuilder.Entity<Gender>(entity =>
         {
             entity.HasKey(e => e.GenderId).HasName("PK__Gender__4E24E9F701341065");

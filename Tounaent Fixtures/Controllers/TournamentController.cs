@@ -21,8 +21,7 @@ namespace Tounaent_Fixtures.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(TournamentViewModel model)
         {
-            if (ModelState.IsValid)
-            {
+
                 var tournament = new TblTournament
                 {
                     TournamentName = model.TournamentName,
@@ -35,12 +34,13 @@ namespace Tounaent_Fixtures.Controllers
                     IsActive = model.IsActive
                 };
 
-                _context.TblTournaments.Add(tournament);
+                _context.TblTournament.Add(tournament);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Home");
-            }
+                TempData["SuccessMessage"] = "Tournament successfully registered!";
 
-            return View(model);
+                return View(new TournamentViewModel());
+
+
         }
     }
 

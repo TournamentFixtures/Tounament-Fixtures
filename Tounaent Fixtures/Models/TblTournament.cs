@@ -25,5 +25,5 @@ public partial class TblTournament
 
     public string? ModifyBy { get; set; }
 
-    public bool? IsActive { get; set; }
+    public bool IsActive { get; set; }
 }

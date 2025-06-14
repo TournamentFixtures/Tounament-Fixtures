@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Tounaent_Fixtures.Models
 {
 
     public class TournamentViewModel
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]  // <-- this is important
         public int Tournament_Id { get; set; }
 
         [Required]
@@ -26,7 +28,7 @@ namespace Tounaent_Fixtures.Models
         public DateTime? Modify_dt { get; set; }
         public string Modify_by { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
     }
 
 }
