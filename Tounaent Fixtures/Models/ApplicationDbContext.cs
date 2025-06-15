@@ -21,6 +21,11 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<TblTournament> TblTournament { get; set; }
 
+    public virtual DbSet<TblTournamentUserReg> TblTournamentUserRegs { get; set; }
+    public virtual DbSet<TblCategory> TblCategory { get; set; }
+
+    public virtual DbSet<TblWeightCategory> TblWeightCategory { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -28,13 +33,74 @@ public partial class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<TblWeightCategory>(entity =>
+        {
+            entity.HasKey(e => e.WeightCatId);
+            entity.Property(e => e.WeightCatId).HasColumnName("Weight_Cat_id");
+            entity.Property(e => e.WeightCatName).HasColumnName("Weight_Cat_Name");
+            entity.Property(e => e.CatId).HasColumnName("Cat_id");
+            // Map others similarly if needed
+        });
+        modelBuilder.Entity<TblCategory>(entity =>
+        {
+            entity.HasKey(e => e.CatId);
+
+            entity.ToTable("Tbl_Category"); // match your table name exactly
+
+            entity.Property(e => e.CatId).HasColumnName("Cat_id");
+            entity.Property(e => e.CategoryName).HasColumnName("Category_Name");
+            entity.Property(e => e.GenId).HasColumnName("Gen_id");
+            entity.Property(e => e.IsActive).HasColumnName("IsActive");
+            entity.Property(e => e.AddedDt).HasColumnName("Added_dt");
+            entity.Property(e => e.AddedBy).HasColumnName("Added_by");
+            entity.Property(e => e.ModifyDt).HasColumnName("Modify_dt");
+            entity.Property(e => e.ModifyBy).HasColumnName("Modify_by");
+        });
+        modelBuilder.Entity<TblTournamentUserReg>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("Tbl_Tournament_User_Reg");
+
+            entity.Property(e => e.AddedBy)
+                .HasMaxLength(50)
+                .HasColumnName("Added_by");
+            entity.Property(e => e.AddedDt)
+                .HasColumnType("datetime")
+                .HasColumnName("Added_dt");
+            entity.Property(e => e.AdharNumb).HasMaxLength(500);
+            entity.Property(e => e.CatId).HasColumnName("Cat_id");
+            entity.Property(e => e.ClubName).HasMaxLength(500);
+            entity.Property(e => e.DistictId).HasColumnName("Distict_id");
+            entity.Property(e => e.Dob)
+                .HasColumnType("datetime")
+                .HasColumnName("DOB");
+            entity.Property(e => e.Email).HasMaxLength(150);
+            entity.Property(e => e.FatherName)
+                .HasMaxLength(150)
+                .HasColumnName("Father_Name");
+            entity.Property(e => e.MobileNo).HasMaxLength(150);
+            entity.Property(e => e.ModifyBy)
+                .HasMaxLength(50)
+                .HasColumnName("Modify_by");
+            entity.Property(e => e.ModifyDt)
+                .HasColumnType("datetime")
+                .HasColumnName("Modify_dt");
+            entity.Property(e => e.Name).HasMaxLength(150);
+            entity.Property(e => e.TrId).HasColumnName("Tr_id");
+            entity.Property(e => e.TrUserId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("Tr_User_id");
+            entity.Property(e => e.UserId).HasColumnName("User_id");
+            entity.Property(e => e.WeightCatId).HasColumnName("Weight_Cat_id");
+        });
         modelBuilder.Entity<TblTournament>(entity =>
         {
-            entity.ToTable("Tbl_Tournament"); 
+            entity.ToTable("Tbl_Tournament");
 
             entity.HasKey(e => e.TournamentId);
             entity.Property(e => e.TournamentId).ValueGeneratedOnAdd()
-            .HasColumnName("Tournament_Id"); 
+            .HasColumnName("Tournament_Id");
             entity.Property(e => e.FromDt)
               .HasColumnName("From_dt");
             entity.Property(e => e.AddedBy)

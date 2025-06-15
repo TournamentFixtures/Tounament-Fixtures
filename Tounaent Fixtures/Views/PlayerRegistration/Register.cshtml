@@ -1,0 +1,177 @@
+﻿@model Tounaent_Fixtures.Models.PlayerViewModel
+
+@{
+    ViewData["Title"] = "Player Registration";
+}
+
+<h2>Player Registration</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<form asp-action="Register" method="post">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FatherName"></label>
+        <input asp-for="FatherName" class="form-control" />
+    </div>
+
+
+
+
+    <div class="form-group">
+        <label asp-for="MobileNo"></label>
+        <input asp-for="MobileNo" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+
+    <!-- Gender -->
+    <div class="form-group col-md-6">
+        <label>Gender</label>
+    @foreach (var gender in Model.GenderOptions.Where(g => g.Value == "1" || g.Value == "2"))
+    {
+        <div>
+            <input type="radio" asp-for="GenderId" value="@gender.Value" id="gender_@gender.Value" />
+            <label for="gender_@gender.Value">@gender.Text</label>
+        </div>
+    }
+    </div>
+
+    <!-- DOB -->
+    <div class="form-group col-md-6">
+        <label>DOB</label>
+        <input id="dob" name="Dob" class="form-control" type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+    </div>
+
+    <!-- Category (readonly or hidden or dropdown) -->
+    <div class="form-group col-md-6">
+        <label>Category</label>
+        <input type="text" id="categoryName" class="form-control" readonly />
+        <input type="hidden" id="CatId" name="CatId" />
+    </div>
+
+
+    <div class="form-group col-md-6">
+        <label asp-for="WeightCatId"></label>
+        <select asp-for="WeightCatId" class="form-control" id="weightCatDropdown">
+            <option value="">-- Select Weight Category --</option>
+        </select>
+        <span asp-validation-for="WeightCatId" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="DistictId"></label>
+        <input asp-for="DistictId" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ClubName"></label>
+        <input asp-for="ClubName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AdharNumb"></label>
+        <input asp-for="AdharNumb" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Address"></label>
+        <textarea asp-for="Address" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Remarks"></label>
+        <textarea asp-for="Remarks" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group form-check">
+        <input asp-for="IsActive" class="form-check-input" />
+        <label asp-for="IsActive" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function calculateAge(dob) {
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        function fetchCategory() {
+            const genderId = $("input[name='GenderId']:checked").val();
+            const dob = $("#dob").val();
+            if (!genderId || !dob) return;
+
+            const age = calculateAge(dob);
+
+            $.ajax({
+                url: '/PlayerRegistration/GetCategoryByGenderAndAge',
+                type: 'GET',
+                data: { genderId: genderId, age: age },
+                success: function (data) {
+                    if (data && data.categoryName) {
+                        $("#categoryName").val(data.categoryName);
+                        $("#CatId").val(data.catId);
+
+                        // ✅ Fetch weight categories based on category ID
+                        $.ajax({
+                            url: '/PlayerRegistration/GetWeightCategoriesByCategory',
+                            type: 'GET',
+                            data: { catId: data.catId },
+                            success: function (weights) {
+                                let dropdown = $("#weightCatDropdown");
+                                dropdown.empty();
+                                dropdown.append('<option value="">-- Select Weight Category --</option>');
+                                $.each(weights, function (i, item) {
+                                    dropdown.append(`<option value="${item.value}">${item.text}</option>`);
+                                });
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Weight category error:", xhr.responseText);
+                                alert("❌ Failed to load weight categories.");
+                            }
+                        });
+
+                    } else {
+                        $("#categoryName").val("No category found");
+                        $("#CatId").val("");
+                        $("#weightCatDropdown").empty().append('<option value="">-- Select Weight Category --</option>');
+                    }
+                },
+                error: function () {
+                    alert("❌ Failed to load category.");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $(".gender-radio").change(fetchCategory);
+            $("#dob").change(fetchCategory);
+        });
+    </script>
+
+}
+
