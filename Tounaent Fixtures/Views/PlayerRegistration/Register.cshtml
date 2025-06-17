@@ -80,10 +80,18 @@
     </div>
 
 
-    <div class="form-group">
-        <label asp-for="ClubName"></label>
-        <input asp-for="ClubName" class="form-control" />
+    <div class="form-group col-md-6">
+        <label asp-for="ClubId">Club Name</label>
+        <select asp-for="ClubId" class="form-control" id="clubDropdown">
+            <option value="">-- Select Club --</option>
+            @foreach (var club in Model.ClubOptions)
+            {
+                <option value="@club.Value">@club.Text</option>
+            }
+        </select>
+        <span asp-validation-for="ClubId" class="text-danger"></span>
     </div>
+
 
     <div class="form-group">
         <label asp-for="AdharNumb"></label>
@@ -124,7 +132,7 @@
             return age;
         }
 
-        function fetchCategory() {
+        function fetchCategoryAndWeight() {
             const genderId = $("input[name='GenderId']:checked").val();
             const dob = $("#dob").val();
             if (!genderId || !dob) return;
@@ -140,7 +148,7 @@
                         $("#categoryName").val(data.categoryName);
                         $("#CatId").val(data.catId);
 
-                        // ✅ Fetch weight categories based on category ID
+                        // ✅ Fetch weight categories based on CatId
                         $.ajax({
                             url: '/PlayerRegistration/GetWeightCategoriesByCategory',
                             type: 'GET',
@@ -153,7 +161,7 @@
                                     dropdown.append(`<option value="${item.value}">${item.text}</option>`);
                                 });
                             },
-                            error: function (xhr, status, error) {
+                            error: function (xhr) {
                                 console.error("Weight category error:", xhr.responseText);
                                 alert("❌ Failed to load weight categories.");
                             }
@@ -171,11 +179,36 @@
             });
         }
 
+        function fetchClubsByDistrict() {
+            const districtId = $("#DistictId").val();
+            if (!districtId) return;
+
+            $.ajax({
+                url: '/PlayerRegistration/GetClubsByDistrict',
+                type: 'GET',
+                data: { districtId: districtId },
+                success: function (clubs) {
+                    let dropdown = $("#clubDropdown");
+                    dropdown.empty();
+                    dropdown.append('<option value="">-- Select Club --</option>');
+                    $.each(clubs, function (i, club) {
+                        dropdown.append(`<option value="${club.value}">${club.text}</option>`);
+                    });
+                },
+                error: function (xhr) {
+                    console.error("Club fetch error:", xhr.responseText);
+                    alert("❌ Failed to load clubs.");
+                }
+            });
+        }
+
         $(document).ready(function () {
-            $(".gender-radio").change(fetchCategory);
-            $("#dob").change(fetchCategory);
+            $(".gender-radio").change(fetchCategoryAndWeight);
+            $("#dob").change(fetchCategoryAndWeight);
+            $("#DistictId").change(fetchClubsByDistrict);
         });
     </script>
+
 
 }
 

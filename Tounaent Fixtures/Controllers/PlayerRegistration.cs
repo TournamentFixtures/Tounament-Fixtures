@@ -19,21 +19,10 @@ namespace Tounaent_Fixtures.Controllers
             var model = new PlayerViewModel
             {
                 GenderOptions = await GetGendersAsync(),
-                DistrictOptions = await GetDistrictsAsync()
+                DistrictOptions = await GetDistrictsAsync(),
+                ClubOptions = new List<SelectListItem>() // initially empty
             };
-
             return View(model);
-        }
-
-        private async Task<List<SelectListItem>> GetGendersAsync()
-        {
-            return await _context.Gender
-                .Select(g => new SelectListItem
-                {
-                    Value = g.GenderId.ToString(),
-                    Text = g.GenderName
-                })
-                .ToListAsync();
         }
 
         private async Task<List<SelectListItem>> GetDistrictsAsync()
@@ -44,6 +33,32 @@ namespace Tounaent_Fixtures.Controllers
                 {
                     Value = d.DistictId.ToString(),
                     Text = d.DistictName
+                }).ToListAsync();
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetClubsByDistrict(int districtId)
+        {
+            var clubs = await _context.TblDistLocalClubs
+                .Where(c => c.DistictId == districtId && c.IsActive)
+                .Select(c => new SelectListItem
+                {
+                    Value = c.ClubId.ToString(),
+                    Text = c.LocalClubName
+                })
+                .ToListAsync();
+
+            return Json(clubs);
+        }
+
+
+
+        private async Task<List<SelectListItem>> GetGendersAsync()
+        {
+            return await _context.Gender
+                .Select(g => new SelectListItem
+                {
+                    Value = g.GenderId.ToString(),
+                    Text = g.GenderName
                 })
                 .ToListAsync();
         }

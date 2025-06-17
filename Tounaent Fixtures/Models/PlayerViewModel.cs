@@ -67,6 +67,7 @@ namespace Tounaent_Fixtures.Models
 
         [NotMapped]
         public List<SelectListItem> ClubOptions { get; set; } = new();
+        public string ClubName {  get; set; }
 
         [Required]
         public string AdharNumb { get; set; }

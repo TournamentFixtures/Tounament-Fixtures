@@ -28,12 +28,41 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<TblDistrict> TblDistricts { get; set; }
 
+    public virtual DbSet<TblDistLocalClub> TblDistLocalClubs { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=tcp:tournamentfixtures.database.windows.net,1433;Initial Catalog=TournamentFixutres;Persist Security Info=False;User ID=adminnew;Password=TestPassword@123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<TblDistLocalClub>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("Tbl_Dist_LocalClub");
+
+            entity.Property(e => e.AddedBy)
+                .HasMaxLength(50)
+                .HasColumnName("Added_by");
+            entity.Property(e => e.AddedDt)
+                .HasColumnType("datetime")
+                .HasColumnName("Added_dt");
+            entity.Property(e => e.ClubId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("Club_id");
+            entity.Property(e => e.DistictId).HasColumnName("Distict_id");
+            entity.Property(e => e.LocalClubName)
+                .HasMaxLength(100)
+                .HasColumnName("Local_Club_Name");
+            entity.Property(e => e.ModifyBy)
+                .HasMaxLength(50)
+                .HasColumnName("Modify_by");
+            entity.Property(e => e.ModifyDt)
+                .HasColumnType("datetime")
+                .HasColumnName("Modify_dt");
+            entity.Property(e => e.StateId).HasColumnName("State_id");
+        });
         modelBuilder.Entity<TblWeightCategory>(entity =>
         {
             entity.HasKey(e => e.WeightCatId);
