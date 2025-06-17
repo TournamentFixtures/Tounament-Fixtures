@@ -78,5 +78,8 @@ namespace Tounaent_Fixtures.Models
         public string? Remarks { get; set; }
 
         public bool IsActive { get; set; } = true;
+
+        public int TournamentId { get; set; }
+
     }
 }

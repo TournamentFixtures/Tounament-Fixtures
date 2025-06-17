@@ -2,9 +2,20 @@
 
 @{
     ViewData["Title"] = "Player Registration";
+    ViewData["HideNavigation"] = true;
 }
-
-<h2>Player Registration</h2>
+<h2 class="mb-3">
+    @ViewData["TournamentName"] 
+ </h2>
+<h3 class="mb-3">
+    @ViewData["Organization"] 
+</h3>
+<h4 class="mb-3">
+    @ViewData["Venue"]
+</h4>
+<h5 class="mb-3">
+    @ViewData["Date"]
+</h5>
 
 @if (TempData["Success"] != null)
 {

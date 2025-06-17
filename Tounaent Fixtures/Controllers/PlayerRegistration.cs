@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Tounaent_Fixtures.Models;
@@ -14,16 +15,35 @@ namespace Tounaent_Fixtures.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Register()
+        public async Task<IActionResult> Register(int tr_id)
         {
+            var tournament = await _context.TblTournament
+                .Where(t => t.TournamentId == tr_id)
+                .Select(t => new { t.TournamentName, t.OrganizedBy, t.Venue, t.ToDt, t.FromDt })
+                .FirstOrDefaultAsync();
+
+            if (tournament == null)
+            {
+                return NotFound("Tournament not found.");
+            }
+
+            ViewData["TournamentName"] = tournament.TournamentName;
+            ViewData["Organization"] = tournament.OrganizedBy;
+            ViewData["Venue"] = tournament.Venue;
+            ViewData["Date"] = tournament.FromDt?.ToString("dd-MM-yyyy") + " - " + tournament.ToDt?.ToString("dd-MM-yyyy");
+
+
             var model = new PlayerViewModel
             {
+                TournamentId = tr_id, // Pass to hidden field in view
                 GenderOptions = await GetGendersAsync(),
                 DistrictOptions = await GetDistrictsAsync(),
                 ClubOptions = new List<SelectListItem>() // initially empty
             };
+
             return View(model);
         }
+
 
         private async Task<List<SelectListItem>> GetDistrictsAsync()
         {
@@ -101,11 +121,24 @@ namespace Tounaent_Fixtures.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(PlayerViewModel model)
+        public async Task<IActionResult> Register(PlayerViewModel model, int tr_id)
         {
+
             // Reload dropdowns on POST
             model.GenderOptions = await GetGendersAsync();
             model.DistrictOptions = await GetDistrictsAsync();
+
+            var tournament = await _context.TblTournament
+       .Where(t => t.TournamentId == tr_id)
+       .Select(t => new { t.TournamentName, t.OrganizedBy, t.Venue })
+       .FirstOrDefaultAsync();
+
+            if (tournament != null)
+            {
+                ViewData["TournamentName"] = tournament.TournamentName;
+                ViewData["Organization"] = tournament.OrganizedBy;
+                ViewData["Venue"] = tournament.Venue;
+            }
 
             var category = await _context.TblCategory
                 .Where(c => c.GenId == model.GenderId && c.CategoryName == model.CategoryName && c.IsActive)
