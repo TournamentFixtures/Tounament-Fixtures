@@ -13,12 +13,15 @@ namespace Tounaent_Fixtures.Controllers
         {
             _context = context;
         }
+
         public async Task<IActionResult> Register()
         {
             var model = new PlayerViewModel
             {
-                GenderOptions = await GetGendersAsync()
+                GenderOptions = await GetGendersAsync(),
+                DistrictOptions = await GetDistrictsAsync()
             };
+
             return View(model);
         }
 
@@ -32,6 +35,19 @@ namespace Tounaent_Fixtures.Controllers
                 })
                 .ToListAsync();
         }
+
+        private async Task<List<SelectListItem>> GetDistrictsAsync()
+        {
+            return await _context.TblDistricts
+                .Where(d => d.IsActive)
+                .Select(d => new SelectListItem
+                {
+                    Value = d.DistictId.ToString(),
+                    Text = d.DistictName
+                })
+                .ToListAsync();
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetCategoryByGenderAndAge(int genderId, int age)
         {
@@ -50,8 +66,10 @@ namespace Tounaent_Fixtures.Controllers
             {
                 return Json(new { catId = category.CatId, categoryName = category.CategoryName });
             }
+
             return Json(new { });
         }
+
         [HttpGet]
         public async Task<IActionResult> GetWeightCategoriesByCategory(int catId)
         {
@@ -67,18 +85,19 @@ namespace Tounaent_Fixtures.Controllers
             return Json(weights);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Register(PlayerViewModel model)
         {
-            var categoryName = model.CategoryName;
+            // Reload dropdowns on POST
+            model.GenderOptions = await GetGendersAsync();
+            model.DistrictOptions = await GetDistrictsAsync();
+
             var category = await _context.TblCategory
-                .Where(c => c.GenId == model.GenderId && c.CategoryName == categoryName && c.IsActive)
+                .Where(c => c.GenId == model.GenderId && c.CategoryName == model.CategoryName && c.IsActive)
                 .FirstOrDefaultAsync();
 
             if (category == null)
             {
-                // handle error, fallback or notify user
                 ModelState.AddModelError("CatId", "No matching category found.");
                 return View(model);
             }
@@ -97,7 +116,7 @@ namespace Tounaent_Fixtures.Controllers
                     Dob = model.Dob,
                     CatId = model.CatId,
                     WeightCatId = model.WeightCatId,
-                    DistictId = model.DistictId,
+                    DistrictId = model.DistictId, 
                     ClubName = model.ClubName,
                     AdharNumb = model.AdharNumb,
                     Address = model.Address,
@@ -105,7 +124,7 @@ namespace Tounaent_Fixtures.Controllers
                     IsVerified = false,
                     IsActive = model.IsActive,
                     AddedDt = DateTime.Now,
-                    AddedBy = User.Identity?.Name ?? "admin",
+                    AddedBy = User.Identity?.Name ?? "admin"
                 };
 
                 _context.TblTournamentUserRegs.Add(entity);

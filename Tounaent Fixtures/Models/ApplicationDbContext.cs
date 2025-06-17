@@ -26,6 +26,7 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<TblWeightCategory> TblWeightCategory { get; set; }
 
+    public virtual DbSet<TblDistrict> TblDistricts { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -71,7 +72,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.AdharNumb).HasMaxLength(500);
             entity.Property(e => e.CatId).HasColumnName("Cat_id");
             entity.Property(e => e.ClubName).HasMaxLength(500);
-            entity.Property(e => e.DistictId).HasColumnName("Distict_id");
+            entity.Property(e => e.DistrictId).HasColumnName("Distict_id");
             entity.Property(e => e.Dob)
                 .HasColumnType("datetime")
                 .HasColumnName("DOB");
@@ -158,6 +159,32 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.GenderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Registrat__Gende__5FB337D6");
+        });
+        modelBuilder.Entity<TblDistrict>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("Tbl_District");
+
+            entity.Property(e => e.AddedBy)
+                .HasMaxLength(50)
+                .HasColumnName("Added_by");
+            entity.Property(e => e.AddedDt)
+                .HasColumnType("datetime")
+                .HasColumnName("Added_dt");
+            entity.Property(e => e.DistictId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("Distict_id");
+            entity.Property(e => e.DistictName)
+                .HasMaxLength(50)
+                .HasColumnName("Distict_Name");
+            entity.Property(e => e.ModifyBy)
+                .HasMaxLength(50)
+                .HasColumnName("Modify_by");
+            entity.Property(e => e.ModifyDt)
+                .HasColumnType("datetime")
+                .HasColumnName("Modify_dt");
+            entity.Property(e => e.StateId).HasColumnName("State_id");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -17,6 +17,8 @@ public partial class TblTournamentUserReg
 
     public int GenderId { get; set; }
 
+    public string Gender { get; set; } = null!;
+
     public string MobileNo { get; set; } = null!;
 
     public string Email { get; set; } = null!;
@@ -25,9 +27,15 @@ public partial class TblTournamentUserReg
 
     public int CatId { get; set; }
 
+    public string CategoryName { get; set; } = null!;
+
     public int WeightCatId { get; set; }
 
-    public int DistictId { get; set; }
+    public string WeighCatName { get; set; } = null!;
+
+    public int DistrictId { get; set; }
+
+    public string District { get; set; } = null!;
 
     public string ClubName { get; set; } = null!;
 

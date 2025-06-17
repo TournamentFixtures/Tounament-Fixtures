@@ -60,8 +60,13 @@ namespace Tounaent_Fixtures.Models
         [Required]
         public int DistictId { get; set; }
 
+        public List<SelectListItem> DistrictOptions { get; set; } = new();
+
         [Required]
-        public string ClubName { get; set; }
+        public int ClubId { get; set; }
+
+        [NotMapped]
+        public List<SelectListItem> ClubOptions { get; set; } = new();
 
         [Required]
         public string AdharNumb { get; set; }
