@@ -7,6 +7,10 @@ namespace Tounaent_Fixtures.Models
 {
     public class PlayerViewModel 
     {
+        [Key] // ← This attribute marks it as the primary key
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
         [Required]
         public string Name { get; set; }
 
@@ -69,7 +73,6 @@ namespace Tounaent_Fixtures.Models
         public List<SelectListItem> ClubOptions { get; set; } = new();
         public string ClubName {  get; set; }
 
-        [Required]
         public string AdharNumb { get; set; }
 
         [Required]

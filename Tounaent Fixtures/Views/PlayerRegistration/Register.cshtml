@@ -74,7 +74,7 @@
 
 
     <div class="form-group col-md-6">
-        <label asp-for="WeightCatId"></label>
+        <label asp-for="WeightCatId">Weight Category</label>
         <select asp-for="WeightCatId" class="form-control" id="weightCatDropdown">
             <option value="">-- Select Weight Category --</option>
         </select>
@@ -83,7 +83,7 @@
 
 
     <div class="form-group col-md-6">
-        <label asp-for="DistictId"></label>
+        <label asp-for="DistictId">District</label>
         <select asp-for="DistictId" asp-items="Model.DistrictOptions" class="form-control">
             <option value="">-- Select District --</option>
         </select>
@@ -104,10 +104,6 @@
     </div>
 
 
-    <div class="form-group">
-        <label asp-for="AdharNumb"></label>
-        <input asp-for="AdharNumb" class="form-control" />
-    </div>
 
     <div class="form-group">
         <label asp-for="Address"></label>

@@ -139,10 +139,18 @@ namespace Tounaent_Fixtures.Controllers
                 ViewData["Organization"] = tournament.OrganizedBy;
                 ViewData["Venue"] = tournament.Venue;
             }
-
+            var gender = await _context.Gender
+                .Where(c => c.GenderId == model.GenderId)
+                .FirstOrDefaultAsync();
             var category = await _context.TblCategory
                 .Where(c => c.GenId == model.GenderId && c.CategoryName == model.CategoryName && c.IsActive)
                 .FirstOrDefaultAsync();
+            var club = await _context.TblDistLocalClubs
+                .Where(c => c.ClubId == model.ClubId).FirstOrDefaultAsync();
+            var district = await _context.TblDistricts
+                .Where(d => d.DistictId == model.DistictId).FirstOrDefaultAsync();
+            var weightcategory = await _context.TblWeightCategory
+                .Where(w => w.WeightCatId == model.WeightCatId).FirstOrDefaultAsync();
 
             if (category == null)
             {
@@ -151,11 +159,11 @@ namespace Tounaent_Fixtures.Controllers
             }
 
             model.CatId = category.CatId;
+            model.ClubName = club.LocalClubName;
 
-            if (ModelState.IsValid)
-            {
                 var entity = new TblTournamentUserReg
                 {
+                    TrId = model.Id,
                     Name = model.Name,
                     FatherName = model.FatherName,
                     GenderId = model.GenderId,
@@ -172,7 +180,11 @@ namespace Tounaent_Fixtures.Controllers
                     IsVerified = false,
                     IsActive = model.IsActive,
                     AddedDt = DateTime.Now,
-                    AddedBy = User.Identity?.Name ?? "admin"
+                    AddedBy = User.Identity?.Name ?? "admin",
+                    CategoryName = category.CategoryName,
+                    District = district.DistictName,
+                    Gender = gender.GenderName,
+                    WeighCatName = weightcategory.WeightCatName
                 };
 
                 _context.TblTournamentUserRegs.Add(entity);
@@ -180,7 +192,6 @@ namespace Tounaent_Fixtures.Controllers
 
                 TempData["Success"] = "Player registered successfully!";
                 return RedirectToAction("Register");
-            }
 
             return View(model);
         }

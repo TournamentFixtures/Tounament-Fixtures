@@ -69,7 +69,12 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.WeightCatId).HasColumnName("Weight_Cat_id");
             entity.Property(e => e.WeightCatName).HasColumnName("Weight_Cat_Name");
             entity.Property(e => e.CatId).HasColumnName("Cat_id");
-            // Map others similarly if needed
+            entity.Property(e => e.ModifyBy).HasColumnName("Modify_by");
+            entity.Property(e => e.AddedBy).HasColumnName("Added_by");
+            entity.Property(e => e.ModifyDt).HasColumnName("Modify_dt");
+            entity.Property(e => e.AddedDt).HasColumnName("Added_dt");
+
+
         });
         modelBuilder.Entity<TblCategory>(entity =>
         {
@@ -88,9 +93,11 @@ public partial class ApplicationDbContext : DbContext
         });
         modelBuilder.Entity<TblTournamentUserReg>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("Tbl_Tournament_User_Reg");
+            entity.HasKey(e => e.TrUserId).HasName("PK__Tbl_Tour__49FBE2A9E5484551");
+
+            entity.ToTable("Tbl_Tournament_User_Reg");
+
+            entity.Property(e => e.TrUserId).HasColumnName("Tr_User_id");
 
             entity.Property(e => e.AddedBy)
                 .HasMaxLength(50)
@@ -100,8 +107,12 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnName("Added_dt");
             entity.Property(e => e.AdharNumb).HasMaxLength(500);
             entity.Property(e => e.CatId).HasColumnName("Cat_id");
+            entity.Property(e => e.CategoryName)
+                .HasMaxLength(50)
+                .HasColumnName("Category_Name");
             entity.Property(e => e.ClubName).HasMaxLength(500);
-            entity.Property(e => e.DistrictId).HasColumnName("Distict_id");
+            entity.Property(e => e.District).HasMaxLength(50);
+            entity.Property(e => e.DistrictId).HasColumnName("District_id");
             entity.Property(e => e.Dob)
                 .HasColumnType("datetime")
                 .HasColumnName("DOB");
@@ -109,6 +120,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.FatherName)
                 .HasMaxLength(150)
                 .HasColumnName("Father_Name");
+            entity.Property(e => e.Gender).HasMaxLength(10);
             entity.Property(e => e.MobileNo).HasMaxLength(150);
             entity.Property(e => e.ModifyBy)
                 .HasMaxLength(50)
@@ -118,10 +130,10 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnName("Modify_dt");
             entity.Property(e => e.Name).HasMaxLength(150);
             entity.Property(e => e.TrId).HasColumnName("Tr_id");
-            entity.Property(e => e.TrUserId)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("Tr_User_id");
             entity.Property(e => e.UserId).HasColumnName("User_id");
+            entity.Property(e => e.WeighCatName)
+                .HasMaxLength(50)
+                .HasColumnName("Weigh_Cat_Name");
             entity.Property(e => e.WeightCatId).HasColumnName("Weight_Cat_id");
         });
         modelBuilder.Entity<TblTournament>(entity =>
@@ -215,6 +227,8 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnName("Modify_dt");
             entity.Property(e => e.StateId).HasColumnName("State_id");
         });
+
+
 
         OnModelCreatingPartial(modelBuilder);
     }
