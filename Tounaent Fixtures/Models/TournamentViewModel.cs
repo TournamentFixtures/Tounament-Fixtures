@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace Tounaent_Fixtures.Models
@@ -29,6 +30,16 @@ namespace Tounaent_Fixtures.Models
         public string Modify_by { get; set; }
 
         public bool IsActive { get; set; }
+        public int? DistictId { get; set; }
+
+        public string? DistictName { get; set; }
+
+        public List<SelectListItem> DistrictOptions { get; set; } = new();
+        [Display(Name = "Upload Logo1")]
+        public IFormFile? Logo1 { get; set; }
+        [Display(Name = "Upload Logo2")]
+        public IFormFile? Logo2 { get; set; }
+
     }
 
 }

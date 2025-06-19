@@ -138,23 +138,37 @@ public partial class ApplicationDbContext : DbContext
         });
         modelBuilder.Entity<TblTournament>(entity =>
         {
+            entity.HasKey(e => e.TournamentId).HasName("PK__Tbl_Tour__E624E7C350BD6779");
+
             entity.ToTable("Tbl_Tournament");
 
-            entity.HasKey(e => e.TournamentId);
-            entity.Property(e => e.TournamentId).ValueGeneratedOnAdd()
-            .HasColumnName("Tournament_Id");
-            entity.Property(e => e.FromDt)
-              .HasColumnName("From_dt");
+            entity.Property(e => e.TournamentId).HasColumnName("Tournament_Id");
             entity.Property(e => e.AddedBy)
-              .HasColumnName("Added_by");
+                .HasMaxLength(255)
+                .HasColumnName("Added_by");
             entity.Property(e => e.AddedDt)
-              .HasColumnName("Added_dt");
+                .HasColumnType("datetime")
+                .HasColumnName("Added_dt");
+            entity.Property(e => e.DistictId).HasColumnName("Distict_id");
+            entity.Property(e => e.DistictName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("Distict_Name");
+            entity.Property(e => e.FromDt)
+                .HasColumnType("datetime")
+                .HasColumnName("From_dt");
             entity.Property(e => e.ModifyBy)
-              .HasColumnName("Modify_by");
+                .HasMaxLength(255)
+                .HasColumnName("Modify_by");
             entity.Property(e => e.ModifyDt)
-              .HasColumnName("Modify_dt");
+                .HasColumnType("datetime")
+                .HasColumnName("Modify_dt");
+            entity.Property(e => e.OrganizedBy).HasMaxLength(255);
             entity.Property(e => e.ToDt)
-              .HasColumnName("To_dt");
+                .HasColumnType("datetime")
+                .HasColumnName("To_dt");
+            entity.Property(e => e.TournamentName).HasMaxLength(255);
+            entity.Property(e => e.Venue).HasMaxLength(255);
         });
         modelBuilder.Entity<Gender>(entity =>
         {
@@ -176,7 +190,6 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("Modify_dt");
         });
-
         modelBuilder.Entity<Registration>(entity =>
         {
             entity.HasKey(e => e.RegistrationId).HasName("PK__Registra__6EF58810C0A6896F");
@@ -227,7 +240,6 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnName("Modify_dt");
             entity.Property(e => e.StateId).HasColumnName("State_id");
         });
-
 
 
         OnModelCreatingPartial(modelBuilder);

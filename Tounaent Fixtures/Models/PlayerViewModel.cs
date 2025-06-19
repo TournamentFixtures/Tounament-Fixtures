@@ -29,6 +29,11 @@ namespace Tounaent_Fixtures.Models
         [Required]
         public string MobileNo { get; set; }
 
+        [Display(Name = "Upload Photo")]
+        public IFormFile? PhotoFile { get; set; } // for file input in the view
+
+
+
         [Required]
         [EmailAddress]
         public string Email { get; set; }
@@ -61,10 +66,12 @@ namespace Tounaent_Fixtures.Models
         public List<SelectListItem> WeightCatOptions { get; set; } = new();
 
 
-        [Required]
         public int DistictId { get; set; }
 
         public List<SelectListItem> DistrictOptions { get; set; } = new();
+
+        public string DistrictName { get; set; } = string.Empty;
+
 
         [Required]
         public int ClubId { get; set; }

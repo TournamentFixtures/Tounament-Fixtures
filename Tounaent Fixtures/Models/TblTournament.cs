@@ -25,5 +25,13 @@ public partial class TblTournament
 
     public string? ModifyBy { get; set; }
 
-    public bool IsActive { get; set; }
+    public bool? IsActive { get; set; }
+
+    public int? DistictId { get; set; }
+
+    public string? DistictName { get; set; }
+    public byte[]? Logo1 { get; set; } // Nullable if not mandatory
+
+    public byte[]? Logo2 { get; set; } // Nullable if not mandatory
+
 }

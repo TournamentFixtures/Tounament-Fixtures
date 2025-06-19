@@ -12,56 +12,96 @@
     </div>
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="mb-4 text-center">@ViewData["Title"]</h2>
 
-<form asp-action="Register" method="post">
-    <div class="form-group">
-        <label asp-for="TournamentName"></label>
-        <input asp-for="TournamentName" class="form-control" />
-        <span asp-validation-for="TournamentName" class="text-danger"></span>
+<form asp-action="Register" method="post" enctype="multipart/form-data" class="container">
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label asp-for="TournamentName" class="form-label"></label>
+            <input asp-for="TournamentName" class="form-control" />
+            <span asp-validation-for="TournamentName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="OrganizedBy" class="form-label"></label>
+            <input asp-for="OrganizedBy" class="form-control" />
+            <span asp-validation-for="OrganizedBy" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Venue" class="form-label"></label>
+            <input asp-for="Venue" class="form-control" />
+            <span asp-validation-for="Venue" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="DistictId" class="form-label">District</label>
+            <select asp-for="DistictId" asp-items="Model.DistrictOptions" class="form-control">
+                <option value="">-- Select District --</option>
+            </select>
+            <span asp-validation-for="DistictId" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="From_dt" class="form-label">From Date</label>
+            <input asp-for="From_dt" type="date" class="form-control" />
+            <span asp-validation-for="From_dt" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="To_dt" class="form-label">To Date</label>
+            <input asp-for="To_dt" type="date" class="form-control" />
+            <span asp-validation-for="To_dt" class="text-danger"></span>
+        </div>
+
+        <!-- Logo 1 and Preview -->
+        <div class="col-md-6">
+            <label asp-for="Logo1" class="form-label">Upload Logo 1</label>
+            <input asp-for="Logo1" type="file" class="form-control" accept="image/*" onchange="previewPhoto(this, '#logo1Preview')" />
+            <span asp-validation-for="Logo1" class="text-danger"></span>
+
+            <div class="text-center mt-2">
+                <label class="form-label">Logo 1 Preview</label><br />
+                <img id="logo1Preview" src="~/images/placeholder.png" alt="Logo 1 Preview"
+                     style="max-width: 200px; max-height: 200px; border: 1px solid #ccc; padding: 5px;" />
+            </div>
+        </div>
+
+        <!-- Logo 2 and Preview -->
+        <div class="col-md-6">
+            <label asp-for="Logo2" class="form-label">Upload Logo 2</label>
+            <input asp-for="Logo2" type="file" class="form-control" accept="image/*" onchange="previewPhoto(this, '#logo2Preview')" />
+            <span asp-validation-for="Logo2" class="text-danger"></span>
+
+            <div class="text-center mt-2">
+                <label class="form-label">Logo 2 Preview</label><br />
+                <img id="logo2Preview" src="~/images/placeholder.png" alt="Logo 2 Preview"
+                     style="max-width: 200px; max-height: 200px; border: 1px solid #ccc; padding: 5px;" />
+            </div>
+        </div>
+
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-success px-5">Register Tournament</button>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="OrganizedBy"></label>
-        <input asp-for="OrganizedBy" class="form-control" />
-        <span asp-validation-for="OrganizedBy" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Venue"></label>
-        <input asp-for="Venue" class="form-control" />
-        <span asp-validation-for="Venue" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="From_dt"></label>
-        <input asp-for="From_dt" class="form-control" type="date" />
-        <span asp-validation-for="From_dt" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="To_dt"></label>
-        <input asp-for="To_dt" class="form-control" type="date" />
-        <span asp-validation-for="To_dt" class="text-danger"></span>
-    </div>
-
-    <div class="form-check mb-3">
-        <input asp-for="IsActive" class="form-check-input" type="checkbox" />
-        <label asp-for="IsActive" class="form-check-label"></label>
-    </div>
-
-
-    <button type="submit" class="btn btn-success">Register Tournament</button>
 </form>
-<script>
-    setTimeout(function () {
-        $(".alert").alert('close');
-    }, 4000); // closes after 4 seconds
-</script>
-
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        function previewPhoto(input, previewSelector) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $(previewSelector).attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        setTimeout(function () {
+            $(".alert").alert('close');
+        }, 4000);
+    </script>
 }

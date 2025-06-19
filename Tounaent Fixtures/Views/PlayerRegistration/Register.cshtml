@@ -4,130 +4,152 @@
     ViewData["Title"] = "Player Registration";
     ViewData["HideNavigation"] = true;
 }
-<h2 class="mb-3">
-    @ViewData["TournamentName"] 
- </h2>
-<h3 class="mb-3">
-    @ViewData["Organization"] 
-</h3>
-<h4 class="mb-3">
-    @ViewData["Venue"]
-</h4>
-<h5 class="mb-3">
-    @ViewData["Date"]
-</h5>
+
+<div class="text-center mb-4">
+    <h2>@ViewData["TournamentName"]</h2>
+    <h4>@ViewData["Organization"]</h4>
+    <h5>@ViewData["Venue"]</h5>
+    <h6>@ViewData["Date"]</h6>
+</div>
 
 @if (TempData["Success"] != null)
 {
-    <div class="alert alert-success">@TempData["Success"]</div>
+    <script>
+        $(document).ready(function () {
+            const toast = $('<div class="toast align-items-center text-bg-success border-0 position-fixed bottom-0 end-0 m-4" role="alert" aria-live="assertive" aria-atomic="true">' +
+                '<div class="d-flex"><div class="toast-body">' +
+                '@TempData["Success"]' +
+                '</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div></div>');
+
+            $('body').append(toast);
+            toast.toast({ delay: 4000 });
+            toast.toast('show');
+        });
+    </script>
 }
 
-<form asp-action="Register" method="post">
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
 
-    <div class="form-group">
-        <label asp-for="FatherName"></label>
-        <input asp-for="FatherName" class="form-control" />
-    </div>
+<form asp-action="Register" method="post" class="container" enctype="multipart/form-data">
+    <div class="row g-3">
 
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
 
-
-
-    <div class="form-group">
-        <label asp-for="MobileNo"></label>
-        <input asp-for="MobileNo" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-    </div>
-
-    <!-- Gender -->
-    <div class="form-group col-md-6">
-        <label>Gender</label>
-    @foreach (var gender in Model.GenderOptions.Where(g => g.Value == "1" || g.Value == "2"))
-    {
-        <div>
-            <input type="radio" asp-for="GenderId" value="@gender.Value" id="gender_@gender.Value" />
-            <label for="gender_@gender.Value">@gender.Text</label>
+            <div class="form-group mb-3">
+                <label asp-for="FatherName" class="form-label"></label>
+                <input asp-for="FatherName" class="form-control" />
+            </div>
         </div>
-    }
-    </div>
 
-    <!-- DOB -->
-    <div class="form-group col-md-6">
-        <label>DOB</label>
-        <input id="dob" name="Dob" class="form-control" type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
-    </div>
+        <!-- Right Column: Photo Upload + Preview -->
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="PhotoFile" class="form-label">Upload Photo</label>
+                <input asp-for="PhotoFile" type="file" class="form-control" accept="image/*" onchange="previewPhoto(this)" />
+                <span asp-validation-for="PhotoFile" class="text-danger"></span>
+            </div>
 
-    <!-- Category (readonly or hidden or dropdown) -->
-    <div class="form-group col-md-6">
-        <label>Category</label>
-        <input type="text" id="categoryName" class="form-control" readonly />
-        <input type="hidden" id="CatId" name="CatId" />
-    </div>
+            <div class="text-center mt-2">
+                <label class="form-label">Photo Preview</label><br />
+                <img id="photoPreview" src="~/images/placeholder.png" alt="Preview"
+                     style="max-width: 200px; max-height: 200px; border: 1px solid #ccc; padding: 5px;" />
+            </div>
+        </div>
 
-
-    <div class="form-group col-md-6">
-        <label asp-for="WeightCatId">Weight Category</label>
-        <select asp-for="WeightCatId" class="form-control" id="weightCatDropdown">
-            <option value="">-- Select Weight Category --</option>
-        </select>
-        <span asp-validation-for="WeightCatId" class="text-danger"></span>
-    </div>
-
-
-    <div class="form-group col-md-6">
-        <label asp-for="DistictId">District</label>
-        <select asp-for="DistictId" asp-items="Model.DistrictOptions" class="form-control">
-            <option value="">-- Select District --</option>
-        </select>
-        <span asp-validation-for="DistictId" class="text-danger"></span>
-    </div>
-
-
-    <div class="form-group col-md-6">
-        <label asp-for="ClubId">Club Name</label>
-        <select asp-for="ClubId" class="form-control" id="clubDropdown">
-            <option value="">-- Select Club --</option>
-            @foreach (var club in Model.ClubOptions)
+        <!-- Gender -->
+        <div class="col-md-6">
+            <label class="form-label">Gender</label>
+            @foreach (var gender in Model.GenderOptions.Where(g => g.Value == "1" || g.Value == "2"))
             {
-                <option value="@club.Value">@club.Text</option>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input gender-radio" type="radio" asp-for="GenderId" value="@gender.Value" id="gender_@gender.Value" />
+                    <label class="form-check-label" for="gender_@gender.Value">@gender.Text</label>
+                </div>
             }
-        </select>
-        <span asp-validation-for="ClubId" class="text-danger"></span>
+            <span asp-validation-for="GenderId" class="text-danger"></span>
+        </div>
+
+        <!-- DOB -->
+        <div class="col-md-6">
+            <label class="form-label">Date of Birth</label>
+            <input id="dob" name="Dob" class="form-control" type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+        </div>
+
+        <!-- Category -->
+        <div class="col-md-6">
+            <label class="form-label">Category</label>
+            <input type="text" id="categoryName" class="form-control" readonly />
+            <input type="hidden" id="CatId" name="CatId" />
+        </div>
+
+        <!-- Weight Category -->
+        <div class="col-md-6">
+            <label asp-for="WeightCatId" class="form-label">Weight Category</label>
+            <select asp-for="WeightCatId" class="form-control" id="weightCatDropdown">
+                <option value="">-- Select Weight Category --</option>
+            </select>
+            <span asp-validation-for="WeightCatId" class="text-danger"></span>
+        </div>
+
+        <!-- District (readonly) -->
+        <div class="col-md-6">
+            <label class="form-label">District</label>
+            <input type="text" class="form-control" value="@Model.DistrictName" readonly />
+            <input type="hidden" id="districtId" value="@Model.DistictId" />
+        </div>
+
+        <!-- Club Dropdown -->
+        <div class="col-md-6">
+            <label asp-for="ClubId" class="form-label">Club Name</label>
+            <select asp-for="ClubId" class="form-control" id="clubDropdown">
+                <option value="">-- Select Club --</option>
+                @foreach (var club in Model.ClubOptions)
+                {
+                    <option value="@club.Value">@club.Text</option>
+                }
+            </select>
+            <span asp-validation-for="ClubId" class="text-danger"></span>
+        </div>
+
+
+        <div class="col-md-6">
+            <label asp-for="Address" class="form-label"></label>
+            <textarea asp-for="Address" class="form-control"></textarea>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="MobileNo" class="form-label"></label>
+            <input asp-for="MobileNo" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+
+
+        <div class="col-md-12 text-center">
+            <button type="submit" class="btn btn-primary mt-3 px-5">Register</button>
+        </div>
     </div>
-
-
-
-    <div class="form-group">
-        <label asp-for="Address"></label>
-        <textarea asp-for="Address" class="form-control"></textarea>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Remarks"></label>
-        <textarea asp-for="Remarks" class="form-control"></textarea>
-    </div>
-
-    <div class="form-group form-check">
-        <input asp-for="IsActive" class="form-check-input" />
-        <label asp-for="IsActive" class="form-check-label"></label>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Register</button>
 </form>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
     <script>
+             function previewPhoto(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#photoPreview').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
         function calculateAge(dob) {
             const birthDate = new Date(dob);
             const today = new Date();
@@ -149,73 +171,73 @@
             $.ajax({
                 url: '/PlayerRegistration/GetCategoryByGenderAndAge',
                 type: 'GET',
-                data: { genderId: genderId, age: age },
+                data: { genderId, age },
                 success: function (data) {
                     if (data && data.categoryName) {
                         $("#categoryName").val(data.categoryName);
                         $("#CatId").val(data.catId);
 
-                        // ✅ Fetch weight categories based on CatId
-                        $.ajax({
-                            url: '/PlayerRegistration/GetWeightCategoriesByCategory',
-                            type: 'GET',
-                            data: { catId: data.catId },
-                            success: function (weights) {
-                                let dropdown = $("#weightCatDropdown");
-                                dropdown.empty();
-                                dropdown.append('<option value="">-- Select Weight Category --</option>');
-                                $.each(weights, function (i, item) {
-                                    dropdown.append(`<option value="${item.value}">${item.text}</option>`);
-                                });
-                            },
-                            error: function (xhr) {
-                                console.error("Weight category error:", xhr.responseText);
-                                alert("❌ Failed to load weight categories.");
-                            }
-                        });
-
+                        fetchWeightCategories(data.catId);
                     } else {
                         $("#categoryName").val("No category found");
                         $("#CatId").val("");
                         $("#weightCatDropdown").empty().append('<option value="">-- Select Weight Category --</option>');
                     }
                 },
-                error: function () {
+                error: function (xhr) {
+                    console.error("❌ Category fetch error:", xhr.responseText);
                     alert("❌ Failed to load category.");
                 }
             });
         }
 
+        function fetchWeightCategories(catId) {
+            if (!catId) return;
+
+            $.ajax({
+                url: '/PlayerRegistration/GetWeightCategoriesByCategory',
+                type: 'GET',
+                data: { catId },
+                success: function (weights) {
+                    const dropdown = $("#weightCatDropdown");
+                    dropdown.empty().append('<option value="">-- Select Weight Category --</option>');
+                    $.each(weights, function (i, item) {
+                        dropdown.append(`<option value="${item.value}">${item.text}</option>`);
+                    });
+                },
+                error: function (xhr) {
+                    console.error("❌ Weight category error:", xhr.responseText);
+                    alert("❌ Failed to load weight categories.");
+                }
+            });
+        }
+
         function fetchClubsByDistrict() {
-            const districtId = $("#DistictId").val();
+            const districtId = $("#districtId").val();
             if (!districtId) return;
 
             $.ajax({
                 url: '/PlayerRegistration/GetClubsByDistrict',
                 type: 'GET',
-                data: { districtId: districtId },
+                data: { districtId },
                 success: function (clubs) {
-                    let dropdown = $("#clubDropdown");
-                    dropdown.empty();
-                    dropdown.append('<option value="">-- Select Club --</option>');
+                    const dropdown = $("#clubDropdown");
+                    dropdown.empty().append('<option value="">-- Select Club --</option>');
                     $.each(clubs, function (i, club) {
                         dropdown.append(`<option value="${club.value}">${club.text}</option>`);
                     });
                 },
                 error: function (xhr) {
-                    console.error("Club fetch error:", xhr.responseText);
+                    console.error("❌ Club fetch error:", xhr.responseText);
                     alert("❌ Failed to load clubs.");
                 }
             });
         }
 
         $(document).ready(function () {
-            $(".gender-radio").change(fetchCategoryAndWeight);
-            $("#dob").change(fetchCategoryAndWeight);
-            $("#DistictId").change(fetchClubsByDistrict);
+            $(".gender-radio").on("change", fetchCategoryAndWeight);
+            $("#dob").on("change", fetchCategoryAndWeight);
+            fetchClubsByDistrict(); // on page load
         });
     </script>
-
-
 }
-

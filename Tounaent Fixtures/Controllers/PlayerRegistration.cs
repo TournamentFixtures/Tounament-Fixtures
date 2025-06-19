@@ -19,7 +19,7 @@ namespace Tounaent_Fixtures.Controllers
         {
             var tournament = await _context.TblTournament
                 .Where(t => t.TournamentId == tr_id)
-                .Select(t => new { t.TournamentName, t.OrganizedBy, t.Venue, t.ToDt, t.FromDt })
+                .Select(t => new { t.TournamentName, t.OrganizedBy, t.Venue, t.ToDt, t.FromDt, t.DistictName, t.DistictId })
                 .FirstOrDefaultAsync();
 
             if (tournament == null)
@@ -30,15 +30,23 @@ namespace Tounaent_Fixtures.Controllers
             ViewData["TournamentName"] = tournament.TournamentName;
             ViewData["Organization"] = tournament.OrganizedBy;
             ViewData["Venue"] = tournament.Venue;
-            ViewData["Date"] = tournament.FromDt?.ToString("dd-MM-yyyy") + " - " + tournament.ToDt?.ToString("dd-MM-yyyy");
-
+            if (tournament.FromDt == tournament.ToDt)
+            {
+                ViewData["Date"] = tournament.FromDt?.ToString("dd-MM-yyyy");
+            }
+            else
+            {
+                ViewData["Date"] = tournament.FromDt?.ToString("dd-MM-yyyy") + " - " + tournament.ToDt?.ToString("dd-MM-yyyy");
+            }
 
             var model = new PlayerViewModel
             {
                 TournamentId = tr_id, // Pass to hidden field in view
                 GenderOptions = await GetGendersAsync(),
-                DistrictOptions = await GetDistrictsAsync(),
-                ClubOptions = new List<SelectListItem>() // initially empty
+                DistrictName = tournament.DistictName,
+                DistictId = (int)tournament.DistictId,
+                //DistrictOptions = await GetDistrictsAsync(),
+                ClubOptions = await GetClubsByDistrict((int)tournament.DistictId) 
             };
 
             return View(model);
@@ -55,20 +63,19 @@ namespace Tounaent_Fixtures.Controllers
                     Text = d.DistictName
                 }).ToListAsync();
         }
-        [HttpGet]
-        public async Task<IActionResult> GetClubsByDistrict(int districtId)
+        public async Task<List<SelectListItem>> GetClubsByDistrict(int districtId)
         {
-            var clubs = await _context.TblDistLocalClubs
+            return await _context.TblDistLocalClubs
                 .Where(c => c.DistictId == districtId && c.IsActive)
                 .Select(c => new SelectListItem
                 {
-                    Value = c.ClubId.ToString(),
+                    Value = c.LocalClubName, // or ClubId if you're storing ID
                     Text = c.LocalClubName
                 })
                 .ToListAsync();
 
-            return Json(clubs);
         }
+
 
 
 
@@ -87,11 +94,12 @@ namespace Tounaent_Fixtures.Controllers
         public async Task<IActionResult> GetCategoryByGenderAndAge(int genderId, int age)
         {
             string categoryName;
-            if (age < 6) categoryName = "PeeWee";
-            else if (age < 14) categoryName = "SubJunior";
+            if (age < 7) categoryName = "PeeWee";
+            else if (age < 11) categoryName = "SubJunior";
+            else if (age < 14) categoryName = "Cadet";
             else if (age < 17) categoryName = "Junior";
-            else if (age < 20) categoryName = "Cadet";
-            else categoryName = "Senior";
+            else if (age >= 17) categoryName = "Senior";
+            else categoryName = "---Select Category---";
 
             var category = await _context.TblCategory
                 .Where(c => c.GenId == genderId && c.CategoryName == categoryName && c.IsActive)
@@ -130,7 +138,7 @@ namespace Tounaent_Fixtures.Controllers
 
             var tournament = await _context.TblTournament
        .Where(t => t.TournamentId == tr_id)
-       .Select(t => new { t.TournamentName, t.OrganizedBy, t.Venue })
+       .Select(t => new { t.TournamentName, t.OrganizedBy, t.Venue, t.DistictId })
        .FirstOrDefaultAsync();
 
             if (tournament != null)
@@ -160,10 +168,20 @@ namespace Tounaent_Fixtures.Controllers
 
             model.CatId = category.CatId;
             model.ClubName = club.LocalClubName;
-
-                var entity = new TblTournamentUserReg
+            byte[]? photoBytes = null;
+            if (model.PhotoFile != null && model.PhotoFile.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
                 {
-                    TrId = model.Id,
+                    await model.PhotoFile.CopyToAsync(memoryStream);
+                    photoBytes = memoryStream.ToArray();
+                }
+            }
+
+
+            var entity = new TblTournamentUserReg
+                {
+                    TrId = tr_id,
                     Name = model.Name,
                     FatherName = model.FatherName,
                     GenderId = model.GenderId,
@@ -184,16 +202,16 @@ namespace Tounaent_Fixtures.Controllers
                     CategoryName = category.CategoryName,
                     District = district.DistictName,
                     Gender = gender.GenderName,
-                    WeighCatName = weightcategory.WeightCatName
+                    WeighCatName = weightcategory.WeightCatName,
+                    Photo = photoBytes
                 };
 
                 _context.TblTournamentUserRegs.Add(entity);
                 await _context.SaveChangesAsync();
 
                 TempData["Success"] = "Player registered successfully!";
-                return RedirectToAction("Register");
+                return RedirectToAction("Register", new {tr_id = "4"});
 
-            return View(model);
         }
     }
 }

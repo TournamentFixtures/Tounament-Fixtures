@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using Tounaent_Fixtures.Models;
 
 namespace Tounaent_Fixtures.Controllers
@@ -12,17 +15,49 @@ namespace Tounaent_Fixtures.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public IActionResult Register()
+        private async Task<List<SelectListItem>> GetDistrictsAsync()
         {
-            return View();
+            return await _context.TblDistricts
+                .Where(d => d.IsActive)
+                .Select(d => new SelectListItem
+                {
+                    Value = d.DistictId.ToString(),
+                    Text = d.DistictName
+                }).ToListAsync();
+        }
+        [HttpGet]
+        public async Task<IActionResult> Register()
+        {
+            var model = new TournamentViewModel
+            {
+                DistrictOptions = await GetDistrictsAsync()
+            };
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(TournamentViewModel model)
         {
 
-                var tournament = new TblTournament
+            byte[]? logo1bytes = null;
+            if (model.Logo1 != null && model.Logo1.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await model.Logo1.CopyToAsync(memoryStream);
+                    logo1bytes = memoryStream.ToArray();
+                }
+            }
+            byte[]? logo2bytes = null;
+            if (model.Logo2 != null && model.Logo2.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await model.Logo2.CopyToAsync(memoryStream);
+                    logo2bytes = memoryStream.ToArray();
+                }
+            }
+            var tournament = new TblTournament
                 {
                     TournamentName = model.TournamentName,
                     OrganizedBy = model.OrganizedBy,
@@ -31,7 +66,11 @@ namespace Tounaent_Fixtures.Controllers
                     ToDt = model.To_dt,
                     AddedDt = DateTime.Now,
                     AddedBy = User.Identity?.Name ?? "admin",
-                    IsActive = model.IsActive
+                    IsActive = model.IsActive,
+                    DistictId = model.DistictId,
+                    DistictName = model.DistictName,
+                    Logo1 = logo1bytes,
+                    Logo2 = logo2bytes
                 };
 
                 _context.TblTournament.Add(tournament);
