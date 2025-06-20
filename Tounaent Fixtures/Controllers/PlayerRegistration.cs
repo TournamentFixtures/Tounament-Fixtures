@@ -138,7 +138,7 @@ namespace Tounaent_Fixtures.Controllers
 
 
             var tournament = await _context.TblTournament
-       .Where(t => t.TournamentId == tr_id)
+       .Where(t => t.TournamentId == model.TournamentId)
        .Select(t => new { t.TournamentName, t.OrganizedBy, t.Venue, t.DistictId })
        .FirstOrDefaultAsync();
 
@@ -157,7 +157,7 @@ namespace Tounaent_Fixtures.Controllers
             var club = await _context.TblDistLocalClubs
                 .Where(c => c.ClubId == model.ClubId).FirstOrDefaultAsync();
             var district = await _context.TblDistricts
-                .Where(d => d.DistictId == model.DistictId).FirstOrDefaultAsync();
+                .Where(d => d.DistictId == tournament.DistictId).FirstOrDefaultAsync();
             var weightcategory = await _context.TblWeightCategory
                 .Where(w => w.WeightCatId == model.WeightCatId).FirstOrDefaultAsync();
 
