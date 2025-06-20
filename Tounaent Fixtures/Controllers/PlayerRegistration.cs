@@ -41,7 +41,7 @@ namespace Tounaent_Fixtures.Controllers
 
             var model = new PlayerViewModel
             {
-                TournamentId = tr_id, // Pass to hidden field in view
+                TournamentId = tr_id, 
                 GenderOptions = await GetGendersAsync(),
                 DistrictName = tournament.DistictName,
                 DistictId = (int)tournament.DistictId,
@@ -69,7 +69,7 @@ namespace Tounaent_Fixtures.Controllers
                 .Where(c => c.DistictId == districtId && c.IsActive)
                 .Select(c => new SelectListItem
                 {
-                    Value = c.LocalClubName, // or ClubId if you're storing ID
+                    Value = c.ClubId.ToString(), // or ClubId if you're storing ID
                     Text = c.LocalClubName
                 })
                 .ToListAsync();
@@ -136,6 +136,7 @@ namespace Tounaent_Fixtures.Controllers
             model.GenderOptions = await GetGendersAsync();
             model.DistrictOptions = await GetDistrictsAsync();
 
+
             var tournament = await _context.TblTournament
        .Where(t => t.TournamentId == tr_id)
        .Select(t => new { t.TournamentName, t.OrganizedBy, t.Venue, t.DistictId })
@@ -181,7 +182,7 @@ namespace Tounaent_Fixtures.Controllers
 
             var entity = new TblTournamentUserReg
                 {
-                    TrId = tr_id,
+                    TrId = model.TournamentId,
                     Name = model.Name,
                     FatherName = model.FatherName,
                     GenderId = model.GenderId,

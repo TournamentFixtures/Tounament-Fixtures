@@ -38,7 +38,8 @@ namespace Tounaent_Fixtures.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(TournamentViewModel model)
         {
-
+            var district = await _context.TblDistricts
+                .Where(d => d.DistictId == model.DistictId).FirstOrDefaultAsync();
             byte[]? logo1bytes = null;
             if (model.Logo1 != null && model.Logo1.Length > 0)
             {
@@ -68,7 +69,7 @@ namespace Tounaent_Fixtures.Controllers
                     AddedBy = User.Identity?.Name ?? "admin",
                     IsActive = model.IsActive,
                     DistictId = model.DistictId,
-                    DistictName = model.DistictName,
+                    DistictName = district.DistictName,
                     Logo1 = logo1bytes,
                     Logo2 = logo2bytes
                 };
