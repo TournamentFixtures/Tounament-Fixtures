@@ -50,11 +50,12 @@ namespace Tounaent_Fixtures.Models
             get
             {
                 var age = Age;
-                if (age < 6) return "PeeWee";
-                if (age < 12) return "SubJunior";
-                if (age < 16) return "Junior";
-                if (age < 20) return "Cadet";
-                return "Senior";
+                if (age < 7) return "PeeWee";
+                else if (age < 11) return "SubJunior";
+                else if (age < 14) return "Cadet";
+                else if (age < 17) return "Junior";
+                else if (age >= 17) return "Senior";
+                else return "---Select Category---";
             }
         }
 
