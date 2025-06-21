@@ -55,28 +55,40 @@
         </div>
 
         <!-- Logo 1 and Preview -->
-        <div class="col-md-6">
-            <label asp-for="Logo1" class="form-label">Upload Logo 1</label>
-            <input asp-for="Logo1" type="file" class="form-control" accept="image/*" onchange="previewPhoto(this, '#logo1Preview')" />
-            <span asp-validation-for="Logo1" class="text-danger"></span>
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+            <div class="form-group position-relative text-center" style="width: 150px; height: 150px;">
+                <!-- Upload Area -->
+                <label for="photoInput" id="uploadLabel" style="cursor: pointer; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; border-radius: 8px;">
+                    <div id="uploadIcon">
+                        <i class="fas fa-upload fa-2x text-primary"></i>
+                        <div style="font-size: 0.9rem;">Upload Logo 1</div>
+                    </div>
+                    <img id="photoPreview" src="#" alt="Preview"
+                         style="display:none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" />
+                </label>
 
-            <div class="text-center mt-2">
-                <label class="form-label">Logo 1 Preview</label><br />
-                <img id="logo1Preview" src="~/images/placeholder.png" alt="Logo 1 Preview"
-                     style="max-width: 200px; max-height: 200px; border: 1px solid #ccc; padding: 5px;" />
+                <!-- Hidden File Input -->
+                <input asp-for="Logo1" type="file" id="photoInput" accept="image/*" style="display:none;" />
+                <span asp-validation-for="Logo1" class="text-danger"></span>
             </div>
         </div>
 
         <!-- Logo 2 and Preview -->
-        <div class="col-md-6">
-            <label asp-for="Logo2" class="form-label">Upload Logo 2</label>
-            <input asp-for="Logo2" type="file" class="form-control" accept="image/*" onchange="previewPhoto(this, '#logo2Preview')" />
-            <span asp-validation-for="Logo2" class="text-danger"></span>
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+            <div class="form-group position-relative text-center" style="width: 150px; height: 150px;">
+                <!-- Upload Area -->
+                <label for="photoInput" id="uploadLabel" style="cursor: pointer; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; border-radius: 8px;">
+                    <div id="uploadIcon">
+                        <i class="fas fa-upload fa-2x text-primary"></i>
+                        <div style="font-size: 0.9rem;">Upload Logo 2</div>
+                    </div>
+                    <img id="photoPreview" src="#" alt="Preview"
+                         style="display:none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" />
+                </label>
 
-            <div class="text-center mt-2">
-                <label class="form-label">Logo 2 Preview</label><br />
-                <img id="logo2Preview" src="~/images/placeholder.png" alt="Logo 2 Preview"
-                     style="max-width: 200px; max-height: 200px; border: 1px solid #ccc; padding: 5px;" />
+                <!-- Hidden File Input -->
+                <input asp-for="Logo2" type="file" id="photoInput" accept="image/*" style="display:none;" />
+                <span asp-validation-for="Logo2" class="text-danger"></span>
             </div>
         </div>
 
@@ -90,11 +102,12 @@
     @await Html.PartialAsync("_ValidationScriptsPartial")
 
     <script>
-        function previewPhoto(input, previewSelector) {
+        function previewPhoto(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    $(previewSelector).attr('src', e.target.result);
+                    $("#photoPreview").attr("src", e.target.result).show();
+                    $("#uploadIcon").hide();
                 };
                 reader.readAsDataURL(input.files[0]);
             }

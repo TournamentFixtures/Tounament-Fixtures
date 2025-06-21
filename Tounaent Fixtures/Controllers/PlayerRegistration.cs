@@ -64,10 +64,6 @@ namespace Tounaent_Fixtures.Controllers
                 //DistrictOptions = await GetDistrictsAsync(),
                 ClubOptions = await GetClubsByDistrict((int)tournament.DistictId) 
             };
-            if (TempData["Success"] != null)
-            {
-                TempData.Keep("Success");
-            }
 
 
             return View(model);
@@ -235,7 +231,6 @@ namespace Tounaent_Fixtures.Controllers
           
 
             TempData["Success"] = "Player registered successfully!";
-            TempData.Keep("Success");
 
             return RedirectToAction("Register", new {token = token});
 
