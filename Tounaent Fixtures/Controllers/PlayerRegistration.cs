@@ -225,9 +225,11 @@ namespace Tounaent_Fixtures.Controllers
 
                 _context.TblTournamentUserRegs.Add(entity);
                 await _context.SaveChangesAsync();
+                string token = UrlEncryptionHelper.Encrypt(model.TournamentId.ToString());
+          
 
-                TempData["Success"] = "Player registered successfully!";
-                return RedirectToAction("Register", new {tr_id = "4"});
+            TempData["Success"] = "Player registered successfully!";
+                return RedirectToAction("Register", new {token = token});
 
         }
     }
