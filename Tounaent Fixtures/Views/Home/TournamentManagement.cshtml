@@ -22,7 +22,9 @@
                 <td class="venue">@item.Venue</td>
                 <td class="district">@item.DistictName</td>
                 <td>
-                    <button class="btn btn-sm btn-primary edit-btn">URL</button>
+                    <button onclick="window.location.href='@item.URL'" class="btn btn-sm btn-primary edit-btn">
+                        Register Now
+                    </button>
                 </td>
             </tr>
         }

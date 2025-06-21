@@ -34,4 +34,6 @@ public partial class TblTournament
 
     public byte[]? Logo2 { get; set; } // Nullable if not mandatory
 
+    public string? URL { get; set; }
+
 }

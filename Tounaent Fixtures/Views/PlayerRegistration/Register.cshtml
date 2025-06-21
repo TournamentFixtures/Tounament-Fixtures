@@ -5,12 +5,21 @@
     ViewData["HideNavigation"] = true;
 }
 
-<div class="text-center mb-4">
-    <h2>@ViewData["TournamentName"]</h2>
-    <h4>@ViewData["Organization"]</h4>
-    <h5>@ViewData["Venue"]</h5>
-    <h6>@ViewData["Date"]</h6>
-
+<div class="d-flex justify-content-between align-items-center mb-3">
+    @if (ViewData["Logo1"] != null)
+    {
+        <img src="@ViewData["Logo1"]" alt="Logo1" style="height: 80px;" />
+    }
+    <div class="text-center flex-grow-1">
+        <h2>@ViewData["TournamentName"]</h2>
+        <h4>@ViewData["Organization"]</h4>
+        <h5>@ViewData["Venue"]</h5>
+        <h6>@ViewData["Date"]</h6>
+    </div>
+    @if (ViewData["Logo2"] != null)
+    {
+        <img src="@ViewData["Logo2"]" alt="Logo2" style="height: 80px;" />
+    }
 </div>
 
 @if (TempData["Success"] != null)

@@ -59,26 +59,38 @@ namespace Tounaent_Fixtures.Controllers
                 }
             }
             var tournament = new TblTournament
-                {
-                    TournamentName = model.TournamentName,
-                    OrganizedBy = model.OrganizedBy,
-                    Venue = model.Venue,
-                    FromDt = model.From_dt,
-                    ToDt = model.To_dt,
-                    AddedDt = DateTime.Now,
-                    AddedBy = User.Identity?.Name ?? "admin",
-                    IsActive = model.IsActive,
-                    DistictId = model.DistictId,
-                    DistictName = district.DistictName,
-                    Logo1 = logo1bytes,
-                    Logo2 = logo2bytes
-                };
+            {
+                TournamentName = model.TournamentName,
+                OrganizedBy = model.OrganizedBy,
+                Venue = model.Venue,
+                FromDt = model.From_dt,
+                ToDt = model.To_dt,
+                AddedDt = DateTime.Now,
+                AddedBy = User.Identity?.Name ?? "admin",
+                IsActive = model.IsActive,
+                DistictId = model.DistictId,
+                DistictName = district.DistictName,
+                Logo1 = logo1bytes,
+                Logo2 = logo2bytes
+            };
 
-                _context.TblTournament.Add(tournament);
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Tournament successfully registered!";
 
-                return View(new TournamentViewModel());
+            // 1. Save tournament to get generated TournamentId
+            _context.TblTournament.Add(tournament);
+            await _context.SaveChangesAsync(); // now tournament.TournamentId is populated
+
+            // 2. Generate token and update URL
+            var token = UrlEncryptionHelper.Encrypt(tournament.TournamentId.ToString());
+            tournament.URL = $"{Request.Scheme}://{Request.Host}/PlayerRegistration/Register?token={token}";
+
+            // 3. Save updated URL
+            _context.TblTournament.Update(tournament);
+            await _context.SaveChangesAsync();
+
+
+            TempData["SuccessMessage"] = "Tournament successfully registered!";
+
+            return View(new TournamentViewModel());
 
 
         }

@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Wordprocessing;
+using Irony.Parsing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,22 @@ namespace Tounaent_Fixtures.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Register(int tr_id)
+        public async Task<IActionResult> Register(string token)
         {
+            if (string.IsNullOrEmpty(token)) return BadRequest("Missing token");
+
+            int tr_id;
+            try
+            {
+                var decrypted = UrlEncryptionHelper.Decrypt(token);
+                tr_id = int.Parse(decrypted);
+            }
+            catch
+            {
+                return BadRequest("Invalid or tampered token.");
+            }
             var tournament = await _context.TblTournament
                 .Where(t => t.TournamentId == tr_id)
-                .Select(t => new { t.TournamentName, t.OrganizedBy, t.Venue, t.ToDt, t.FromDt, t.DistictName, t.DistictId })
                 .FirstOrDefaultAsync();
 
             if (tournament == null)
@@ -30,6 +42,9 @@ namespace Tounaent_Fixtures.Controllers
             ViewData["TournamentName"] = tournament.TournamentName;
             ViewData["Organization"] = tournament.OrganizedBy;
             ViewData["Venue"] = tournament.Venue;
+            ViewData["Logo1"] = tournament.Logo1 != null ? $"data:image/png;base64,{Convert.ToBase64String(tournament.Logo1)}" : null;
+            ViewData["Logo2"] = tournament.Logo2 != null ? $"data:image/png;base64,{Convert.ToBase64String(tournament.Logo2)}" : null;
+
             if (tournament.FromDt == tournament.ToDt)
             {
                 ViewData["Date"] = tournament.FromDt?.ToString("dd-MM-yyyy");
@@ -132,6 +147,7 @@ namespace Tounaent_Fixtures.Controllers
         public async Task<IActionResult> Register(PlayerViewModel model, int tr_id)
         {
 
+
             // Reload dropdowns on POST
             model.GenderOptions = await GetGendersAsync();
             model.DistrictOptions = await GetDistrictsAsync();
@@ -191,7 +207,7 @@ namespace Tounaent_Fixtures.Controllers
                     Dob = model.Dob,
                     CatId = model.CatId,
                     WeightCatId = model.WeightCatId,
-                    DistrictId = model.DistictId, 
+                    DistrictId = district.DistictId, 
                     ClubName = model.ClubName,
                     AdharNumb = model.AdharNumb,
                     Address = model.Address,
