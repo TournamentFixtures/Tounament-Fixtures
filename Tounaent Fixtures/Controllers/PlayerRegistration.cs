@@ -9,6 +9,7 @@ using System.Net;
 using Tounaent_Fixtures.Models;
 using DinkToPdf.Contracts;
 using System;
+using DocumentFormat.OpenXml.Packaging;
 
 namespace Tounaent_Fixtures.Controllers
 {
@@ -171,6 +172,15 @@ namespace Tounaent_Fixtures.Controllers
                 ViewData["TournamentName"] = tournament.TournamentName;
                 ViewData["Organization"] = tournament.OrganizedBy;
                 ViewData["Venue"] = tournament.Venue;
+
+                if (tournament.FromDt == tournament.ToDt)
+                {
+                    ViewData["Date"] = tournament.FromDt?.ToString("dd-MM-yyyy");
+                }
+                else
+                {
+                    ViewData["Date"] = tournament.FromDt?.ToString("dd-MM-yyyy") + " - " + tournament.ToDt?.ToString("dd-MM-yyyy");
+                }
             }
             var gender = await _context.Gender
                 .Where(c => c.GenderId == model.GenderId)
@@ -234,16 +244,18 @@ namespace Tounaent_Fixtures.Controllers
                 _context.TblTournamentUserRegs.Add(entity);
                 await _context.SaveChangesAsync();
                 string token = UrlEncryptionHelper.Encrypt(model.TournamentId.ToString());
-          
 
-            byte[] idCardPdf = GenerateIdCardPdf(model, photoBytes, tournament.Logo1, tournament.Logo2);
+
+            byte[] idCardPdf = GenerateIdCardPdf(model, photoBytes, tournament.Logo1, tournament.Logo2,
+                weightcategory.WeightCatName, gender.GenderName);
             await SendEmailAsync(model.Email, idCardPdf, model);
             TempData["Success"] = "Player registered successfully!";
 
             return RedirectToAction("Register", new {token = token});
 
         }
-        private byte[] GenerateIdCardPdf(PlayerViewModel model, byte[] photoBytes, byte[] Logo1, byte[] Logo2)
+        private byte[] GenerateIdCardPdf(PlayerViewModel model, byte[] photoBytes, byte[] Logo1, byte[] Logo2,
+            string argWeightCat, string argGender)
         {
             string base64Image = photoBytes != null
                 ? $"data:image/jpeg;base64,{Convert.ToBase64String(photoBytes)}"
@@ -311,16 +323,16 @@ label.checkbox-label {{
  {(string.IsNullOrEmpty(base64ImageLogo1) ? "" : $"<img class='photo' src='{base64ImageLogo1}' alt='Photo' height='100px' widht='120px' />")}</td>
       <td style=""width: 50%; text-align: center;"">
         <h4>{ViewData["TournamentName"]}</h4>
-        <p>Date: {ViewData["Date"]}</p>
+        <p>Date: {Convert.ToString(ViewData["Date"])}</p>
         <p> {ViewData["Organization"]} </p>
       </td>
-      <td style=""width: 25%; text-align: center
+      <td style=""width: 25%; text-align: center;"">
  {(string.IsNullOrEmpty(base64ImageLogo2) ? "" : $"<img class='photo' src='{base64ImageLogo2}' alt='Photo' height='100px' widht='120px' />")}</td>
     </tr>
   </table>
 
   <p style=""border-top: 2px solid black; border-bottom: 2px solid black; padding: 10px; text-align:center;"">
-    <strong>Organised by:</strong> SIVADHAPURAM TAEKWONDO CLUB - SIVADHAPURAM<br>
+    <strong>Organised by:</strong> {ViewData["Organization"]}<br>
     <strong>Promoted by:</strong> SALEM DISTRICT AMATEUR TAEKWONDO ASSOCIATION (R)<br>
     <strong>Under the Auspicious of:</strong> TAMILNADU TAEKWONDO ASSOCIATION (R)
   </p>
@@ -329,19 +341,11 @@ label.checkbox-label {{
 
   <table class=""mb-3"">
     <tr>
-      <td style=""width: 75%"">
-        <strong>BOYS -</strong>
-        PeeWee <input type=""checkbox"" name=""category"" value=""boys_peewee""> 
-        Sub-Junior <input type=""checkbox"" name=""category"" value=""boys_subjunior""> 
-        Cadet <input type=""checkbox"" name=""category"" value=""boys_cadet""> 
-        Junior <input type=""checkbox"" name=""category"" value=""boys_junior""> 
-        Senior <input type=""checkbox"" name=""category"" value=""boys_senior""><br>
-        <strong>GIRL -</strong>
-        PeeWee <input type=""checkbox"" name=""category"" value=""girl_peewee""> 
-        Sub-Junior <input type=""checkbox"" name=""category"" value=""girl_subjunior""> 
-        Cadet <input type=""checkbox"" name=""category"" value=""girl_cadet""> 
-        Junior <input type=""checkbox"" name=""category"" value=""girl_junior""> 
-        Senior <input type=""checkbox"" name=""category"" value=""girl_senior"">
+      <td style=""width: 75%""> ""{model.Gender}""
+        <strong>GENDER -</strong>
+<br>
+        <strong>CATEGORY -</strong> ""{model.CategoryName}""
+<br>
       </td>
       <td><div class=""photo-box""> {(string.IsNullOrEmpty(base64Image) ? "" : $"<img class='photo' src='{base64Image}' alt='Photo' height='100px' widht='120px' />")}</div></td>
     </tr>
@@ -350,23 +354,23 @@ label.checkbox-label {{
   <table>
     <tr>
       <td>Weight Category</td>
-      <td><input type=""text"" class=""form-control"" name=""weight_category""></td>
+      <td><input type=""text"" class=""form-control"" name=""weight_category"" value=""{Convert.ToString(argWeightCat)}""></td>
       <td>Weight</td>
       <td><input type=""text"" class=""form-control"" name=""weight""></td>
     </tr>
     <tr>
       <td>Name (in capital letter)</td>
-      <td colspan=""3""><input type=""text"" class=""form-control"" value={model.Name}></td>
+      <td colspan=""3""><input type=""text"" class=""form-control"" value=""{Convert.ToString(model.Name)}""></td>
     </tr>
     <tr>
       <td>Date of Birth</td>
-      <td><input type=""date"" class=""form-control"" name=""dob"" value={model.Dob}></td>
+      <td><input type=""date"" class=""form-control"" name=""dob"" value={Convert.ToString(model.Dob)}></td>
       <td>Age</td>
       <td><input type=""text"" class=""form-control"" name=""age""></td>
     </tr>
     <tr>
       <td>Parent / Guardian Name</td>
-      <td colspan=""3""><input type=""text"" class=""form-control"" value={model.FatherName}></td>
+      <td colspan=""3""><input type=""text"" class=""form-control"" value=""{Convert.ToString(model.FatherName)}""></td>
     </tr>
     <tr>
       <td>Name of the School</td>
@@ -374,11 +378,11 @@ label.checkbox-label {{
     </tr>
     <tr>
       <td>Name of the Club</td>
-      <td colspan=""3""><input type=""text"" class=""form-control"" name=""club""></td>
+      <td colspan=""3""><input type=""text"" class=""form-control"" name=""club"" value=""{Convert.ToString(model.ClubName)}"" ></td>
     </tr>
     <tr>
       <td>Address</td>
-      <td colspan=""3""><textarea class=""form-control"" name=""address"" value={model.Address}></textarea></td>
+      <td colspan=""3""><textarea class=""form-control"" name=""address"">  ""{Convert.ToString(model.Address)}"" </textarea></td>
     </tr>
     <tr>
       <td>Present Belt Grade</td>

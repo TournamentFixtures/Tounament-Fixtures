@@ -1,0 +1,36 @@
+﻿@model List<TblDistrict>
+@{
+    ViewData["Title"] = "District Management";
+}
+
+<h2>Tournament Management</h2>
+<div class="text-center mt-4">
+    <a class="btn btn-outline-primary" asp-controller="Home" asp-action="DistrictManagement">
+        Add New District
+    </a>
+</div>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            
+            <th>Name</th>
+            <th>IsActive</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr data-id="@item.DistictId">
+                <td class="Name">@item.DistictName</td>
+                <td class="IsActive">@item.IsActive</td>
+               
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+       
+    </script>
+}

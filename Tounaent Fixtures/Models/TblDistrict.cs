@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Tounaent_Fixtures.Models;
 
 public partial class TblDistrict
 {
+    //[Key]
+    //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]  // <-- this is important
     public int DistictId { get; set; }
 
     public string DistictName { get; set; } = null!;
@@ -20,4 +25,6 @@ public partial class TblDistrict
     public DateTime? ModifyDt { get; set; }
 
     public string? ModifyBy { get; set; }
+
+    public List<SelectListItem> StateOptions { get; set; } = new();
 }

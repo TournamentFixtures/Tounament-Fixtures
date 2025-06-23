@@ -26,6 +26,12 @@ namespace Tounaent_Fixtures.Controllers
             return View(tournaments);
         }
 
+        public async Task<IActionResult> DistrictManagement()
+        {
+            var districts = await _context.TblDistricts.ToListAsync();
+            return View(districts);
+        }
+
 
         public IActionResult Index()
         {

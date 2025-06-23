@@ -1,0 +1,48 @@
+﻿@model TblDistrict
+
+@{
+    ViewData["Title"] = "Register Tournament";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<h2 class="mb-4 text-center">@ViewData["Title"]</h2>
+
+<form asp-action="Register" method="post" enctype="multipart/form-data" class="container">
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label asp-for="DistictName" class="form-label"></label>
+            <input asp-for="DistictName" class="form-control" />
+            <span asp-validation-for="DistictName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="DistictId" class="form-label">District</label>
+            <select asp-for="DistictId" asp-items="Model.StateOptions" class="form-control">
+                <option value="">-- Select State --</option>
+            </select>
+            <span asp-validation-for="DistictId" class="text-danger"></span>
+        </div>
+
+
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-success px-5">Save Distict</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        setTimeout(function () {
+            $(".alert").alert('close');
+        }, 4000);
+    </script>
+}
