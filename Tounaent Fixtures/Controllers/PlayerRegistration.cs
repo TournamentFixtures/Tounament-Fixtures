@@ -270,7 +270,7 @@ namespace Tounaent_Fixtures.Controllers
        <html lang=""en"">
 <head>
   <meta charset=""UTF-8"">
-  <title>34th Salem District Taekwondo Championship - 2025</title>
+  <title>{ViewData["TournamentName"]}</title>
   <link href=""https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"" rel=""stylesheet"">
   <script src=""https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js""></script>
   <style>
@@ -341,10 +341,10 @@ label.checkbox-label {{
 
   <table class=""mb-3"">
     <tr>
-      <td style=""width: 75%""> ""{model.Gender}""
-        <strong>GENDER -</strong>
+      <td style=""width: 75%""> <strong>GENDER - {model.Gender} </strong>
+        
 <br>
-        <strong>CATEGORY -</strong> ""{model.CategoryName}""
+        <strong>CATEGORY - {model.CategoryName} </strong>
 <br>
       </td>
       <td><div class=""photo-box""> {(string.IsNullOrEmpty(base64Image) ? "" : $"<img class='photo' src='{base64Image}' alt='Photo' height='100px' widht='120px' />")}</div></td>
@@ -382,7 +382,7 @@ label.checkbox-label {{
     </tr>
     <tr>
       <td>Address</td>
-      <td colspan=""3""><textarea class=""form-control"" name=""address"">  ""{Convert.ToString(model.Address)}"" </textarea></td>
+      <td colspan=""3""><textarea class=""form-control"" name=""address"">  {Convert.ToString(model.Address)} </textarea></td>
     </tr>
     <tr>
       <td>Present Belt Grade</td>
