@@ -57,18 +57,16 @@
         <!-- Logo 1 and Preview -->
         <div class="col-md-6 d-flex align-items-center justify-content-center">
             <div class="form-group position-relative text-center" style="width: 150px; height: 150px;">
-                <!-- Upload Area -->
-                <label for="photoInput" id="uploadLabel" style="cursor: pointer; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; border-radius: 8px;">
-                    <div id="uploadIcon">
+                <label for="Logo1" style="cursor: pointer; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; border-radius: 8px;">
+                    <div id="uploadIcon1">
                         <i class="fas fa-upload fa-2x text-primary"></i>
                         <div style="font-size: 0.9rem;">Upload Logo 1</div>
                     </div>
-                    <img id="photoPreview" src="#" alt="Preview"
+                    <img id="photoPreview1" src="#" alt="Preview"
                          style="display:none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" />
                 </label>
 
-                <!-- Hidden File Input -->
-                <input asp-for="Logo1" type="file" id="photoInput" accept="image/*" style="display:none;" />
+                <input asp-for="Logo1" type="file" id="Logo1" accept="image/*" style="display:none;" onchange="previewPhoto(this, 'photoPreview1', 'uploadIcon1')" />
                 <span asp-validation-for="Logo1" class="text-danger"></span>
             </div>
         </div>
@@ -76,18 +74,16 @@
         <!-- Logo 2 and Preview -->
         <div class="col-md-6 d-flex align-items-center justify-content-center">
             <div class="form-group position-relative text-center" style="width: 150px; height: 150px;">
-                <!-- Upload Area -->
-                <label for="photoInput" id="uploadLabel" style="cursor: pointer; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; border-radius: 8px;">
-                    <div id="uploadIcon">
+                <label for="Logo2" style="cursor: pointer; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; border-radius: 8px;">
+                    <div id="uploadIcon2">
                         <i class="fas fa-upload fa-2x text-primary"></i>
                         <div style="font-size: 0.9rem;">Upload Logo 2</div>
                     </div>
-                    <img id="photoPreview" src="#" alt="Preview"
+                    <img id="photoPreview2" src="#" alt="Preview"
                          style="display:none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" />
                 </label>
 
-                <!-- Hidden File Input -->
-                <input asp-for="Logo2" type="file" id="photoInput" accept="image/*" style="display:none;" />
+                <input asp-for="Logo2" type="file" id="Logo2" accept="image/*" style="display:none;" onchange="previewPhoto(this, 'photoPreview2', 'uploadIcon2')" />
                 <span asp-validation-for="Logo2" class="text-danger"></span>
             </div>
         </div>
@@ -102,19 +98,21 @@
     @await Html.PartialAsync("_ValidationScriptsPartial")
 
     <script>
-        function previewPhoto(input) {
+        function previewPhoto(input, previewId, iconId) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    $("#photoPreview").attr("src", e.target.result).show();
-                    $("#uploadIcon").hide();
+                    $("#" + previewId).attr("src", e.target.result).show();
+                    $("#" + iconId).hide();
                 };
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
+        // Auto-dismiss success alert
         setTimeout(function () {
             $(".alert").alert('close');
         }, 4000);
     </script>
+
 }
