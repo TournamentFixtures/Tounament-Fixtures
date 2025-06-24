@@ -245,9 +245,9 @@ namespace Tounaent_Fixtures.Controllers
             string token = UrlEncryptionHelper.Encrypt(model.TournamentId.ToString());
 
 
-            byte[] idCardPdf = GenerateIdCardPdf(model, photoBytes, tournament.Logo1, tournament.Logo2,
-                weightcategory.WeightCatName, gender.GenderName);
-            await SendEmailAsync(model.Email, idCardPdf, model, tournament.TournamentName);
+            //byte[] idCardPdf = GenerateIdCardPdf(model, photoBytes, tournament.Logo1, tournament.Logo2,
+            //    weightcategory.WeightCatName, gender.GenderName);
+            //await SendEmailAsync(model.Email, idCardPdf, model, tournament.TournamentName);
             TempData["Success"] = "Player registered successfully!";
 
             return RedirectToAction("Register", new { token = token });
