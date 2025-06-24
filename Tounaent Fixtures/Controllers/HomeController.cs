@@ -52,6 +52,7 @@ namespace Tounaent_Fixtures.Controllers
             }
             return View(gender);
         }
+
         [HttpPost]
         public async Task<IActionResult> UpdateGender(int genderId, string genderName)
         {
@@ -113,6 +114,56 @@ namespace Tounaent_Fixtures.Controllers
                 return RedirectToAction(nameof(GenderManagement));
             }
             return View(gender);
+        }
+
+        public async Task<IActionResult> ExportTournamentsToExcel()
+        {
+            var tournaments = await _context.TblTournament.ToListAsync();
+
+            var columns = new Dictionary<string, Func<TblTournament, object>>
+    {
+        { "Tournament Name", t => t.TournamentName },
+        { "Organizer", t => t.OrganizedBy },
+        { "Venue", t => t.Venue },
+        { "From Date", t => t.FromDt?.ToString("dd-MM-yyyy") },
+        { "To Date", t => t.ToDt?.ToString("dd-MM-yyyy") },
+        {"URL", t => t.URL }
+        // Add more if needed
+    };
+
+            byte[] excelBytes = ExcelExportHelper.ExportToExcel(tournaments, columns, "Tournaments");
+
+            return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Tournaments.xlsx");
+        }
+
+        public async Task<IActionResult> ExportDistrictsToExcel()
+        {
+            var districts = await _context.TblDistricts.ToListAsync();
+
+            var columns = new Dictionary<string, Func<TblDistrict, object>>
+    {
+        { "District Name", d => d.DistictName },
+        { "Is Active", d => d.IsActive ? "Yes" : "No" }
+    };
+
+            byte[] excelBytes = ExcelExportHelper.ExportToExcel(districts, columns, "Districts");
+
+            return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Districts.xlsx");
+        }
+        public async Task<IActionResult> ExportGenderToExcel()
+        {
+            var gender = await _context.Gender.ToListAsync();
+
+            var columns = new Dictionary<string, Func<Gender, object>>
+    {
+        { "Gender Name", d => d.GenderName },
+        {"Gender Id", d => d.GenderId },
+        { "Is Active", d => d.IsActive}
+    };
+
+            byte[] excelBytes = ExcelExportHelper.ExportToExcel(gender, columns, "Gender");
+
+            return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Gender.xlsx");
         }
 
 

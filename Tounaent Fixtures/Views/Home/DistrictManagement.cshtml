@@ -3,9 +3,9 @@
     ViewData["Title"] = "District Management";
 }
 
-<h2>Tournament Management</h2>
+<h2>District Management</h2>
 <div class="text-center mt-4">
-    <a class="btn btn-outline-primary" asp-controller="Home" asp-action="DistrictManagement">
+    <a class="btn btn-outline-primary" asp-controller="Districts" asp-action="DistrictManagement">
         Add New District
     </a>
 </div>
@@ -28,6 +28,9 @@
         }
     </tbody>
 </table>
+<form asp-controller="Home" asp-action="ExportDistrictsToExcel" method="post" style="display:inline;">
+    <button type="submit" class="btn btn-outline-success mb-3">Export to Excel</button>
+</form>
 
 @section Scripts {
     <script>
