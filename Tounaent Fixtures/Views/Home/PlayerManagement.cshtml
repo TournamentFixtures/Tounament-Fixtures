@@ -1,0 +1,57 @@
+﻿@model List<PlayerExportViewModel>
+@{
+    ViewData["Title"] = "Player Management";
+}
+
+<h2>Player Management</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>User ID</th>
+      <th>Tournament Id</th>
+      <th>Name</th>
+      <th>Father Name</th>
+      <th>Gender</th>
+      <th>Mobile Number</th>
+      <th>Email</th>
+      <th>DOB</th>
+      <th>Category Name</th>
+      <th>Weight Category Name</th>
+      <th>District</th>
+      <th>Club Name</th>
+      <th>Address</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr data-id="@item.TrUserId">
+            <td>@item.TrUserId</td>
+            <td>@item.TrId</td>
+    <td>@(item.Name ?? "-")</td>
+    <td>@(item.FatherName ?? "-")</td>
+    <td>@(item.Gender ?? "-")</td>
+    <td>@(item.MobileNo ?? "-")</td>
+    <td>@(item.Email ?? "-")</td>
+    <td>@(item.Dob)</td>
+    <td>@(item.CategoryName ?? "-")</td>
+    <td>@(item.WeighCatName ?? "-")</td>
+    <td>@(item.District ?? "-")</td>
+    <td>@(item.ClubName ?? "-")</td>
+    <td>@(item.Address ?? "-")</td>
+
+        </tr>
+    }
+</tbody>
+
+</table>
+<form asp-controller="Home" asp-action="ExportPlayerToExcel" method="post" style="display:inline;">
+    <button type="submit" class="btn btn-outline-success mb-3">Export to Excel</button>
+</form>
+
+@section Scripts {
+    <script>
+       
+    </script>
+}

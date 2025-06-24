@@ -31,6 +31,28 @@ namespace Tounaent_Fixtures.Controllers
             var districts = await _context.TblDistricts.ToListAsync();
             return View(districts);
         }
+        public async Task<IActionResult> PlayerManagement()
+        {
+            var players = await _context.TblTournamentUserRegs
+                .Select(p => new PlayerExportViewModel
+                {
+                    TrUserId = p.TrUserId,
+                    TrId = p.TrId,
+                    Name = p.Name,
+                    FatherName = p.FatherName,
+                    Gender = p.Gender,
+                    MobileNo = p.MobileNo,
+                    Email = p.Email,
+                    Dob = p.Dob,
+                    CategoryName = p.CategoryName,
+                    WeighCatName = p.WeighCatName,
+                    District = p.District,
+                    ClubName = p.ClubName,
+                    Address = p.Address
+                })
+                .ToListAsync();
+            return View(players);
+        }
 
 
         public IActionResult Index()
@@ -164,6 +186,48 @@ namespace Tounaent_Fixtures.Controllers
             byte[] excelBytes = ExcelExportHelper.ExportToExcel(gender, columns, "Gender");
 
             return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Gender.xlsx");
+        }
+
+        public async Task<IActionResult> ExportPlayerToExcel()
+        {
+            var players = await _context.TblTournamentUserRegs
+                    .Select(p => new PlayerExportViewModel
+                    {
+                        TrUserId = p.TrUserId,
+                        TrId = p.TrId,
+                        Name = p.Name,
+                        FatherName = p.FatherName,
+                        Gender = p.Gender,
+                        MobileNo = p.MobileNo,
+                        Email = p.Email,
+                        Dob = p.Dob,
+                        CategoryName = p.CategoryName,
+                        WeighCatName = p.WeighCatName,
+                        District = p.District,
+                        ClubName = p.ClubName,
+                        Address = p.Address
+                    })
+                    .ToListAsync();
+            var columns = new Dictionary<string, Func<PlayerExportViewModel, object>>
+    {
+        { "User ID", d => d.TrUserId },
+        {"Tournament Id", d => d.TrId },
+        { "Name", d => d.Name},
+                { "Father Name", d => d.FatherName },
+                { "Gender", d => d.Gender },
+                { "Mobile Number", d => d.MobileNo },
+                { "Email", d => d.Email },
+                { "DOB", d => d.Dob },
+                { "Category Name", d => d.CategoryName },
+                { "Weight Category Name", d => d.WeighCatName},
+                { "District", d => d.District },
+                { "Club Name", d => d.ClubName },
+                { "Address", d => d.Address }
+    };
+
+            byte[] excelBytes = ExcelExportHelper.ExportToExcel(players, columns, "Players");
+
+            return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Players.xlsx");
         }
 
 

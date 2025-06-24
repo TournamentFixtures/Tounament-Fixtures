@@ -93,4 +93,21 @@ namespace Tounaent_Fixtures.Models
         public int TournamentId { get; set; }
 
     }
+    public class PlayerExportViewModel
+    {
+        public int TrUserId { get; set; }
+        public int TrId { get; set; }
+        public string? Name { get; set; }
+        public string? FatherName { get; set; }
+        public string? Gender { get; set; }
+        public string? MobileNo { get; set; }
+        public string? Email { get; set; }
+        public DateTime? Dob { get; set; }
+        public string? CategoryName { get; set; }
+        public string? WeighCatName { get; set; }
+        public string? District { get; set; }
+        public string? ClubName { get; set; }
+        public string? Address { get; set; }
+    }
+
 }
