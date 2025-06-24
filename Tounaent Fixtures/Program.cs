@@ -1,5 +1,4 @@
-using DinkToPdf;
-using DinkToPdf.Contracts;
+using IronPdf;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Tounaent_Fixtures.Models;
@@ -16,7 +15,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true; // Make the session cookie HTTP only
     options.Cookie.IsEssential = true; // Make the session cookie essential
 });
-builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
 
 
 

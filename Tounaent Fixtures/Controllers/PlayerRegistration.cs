@@ -1,5 +1,4 @@
-﻿using DinkToPdf;
-using DocumentFormat.OpenXml.Wordprocessing;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
 using Irony.Parsing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -7,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net.Mail;
 using System.Net;
 using Tounaent_Fixtures.Models;
-using DinkToPdf.Contracts;
+using IronPdf;
 using System;
 using DocumentFormat.OpenXml.Packaging;
 
@@ -17,12 +16,12 @@ namespace Tounaent_Fixtures.Controllers
     {
         private readonly IConfiguration _config;
         private readonly ApplicationDbContext _context;
-        private readonly IConverter _converter;
+        private static readonly object _pdfLock = new();
 
-        public PlayerRegistration(IConfiguration config, IConverter converter, ApplicationDbContext context)
+
+        public PlayerRegistration(IConfiguration config, ApplicationDbContext context)
         {
             _config = config;
-            _converter = converter;
             _context = context;
         }
 
@@ -66,12 +65,12 @@ namespace Tounaent_Fixtures.Controllers
 
             var model = new PlayerViewModel
             {
-                TournamentId = tr_id, 
+                TournamentId = tr_id,
                 GenderOptions = await GetGendersAsync(),
                 DistrictName = tournament.DistictName,
                 DistictId = (int)tournament.DistictId,
                 //DistrictOptions = await GetDistrictsAsync(),
-                ClubOptions = await GetClubsByDistrict((int)tournament.DistictId) 
+                ClubOptions = await GetClubsByDistrict((int)tournament.DistictId)
             };
 
 
@@ -215,51 +214,54 @@ namespace Tounaent_Fixtures.Controllers
 
 
             var entity = new TblTournamentUserReg
-                {
-                    TrId = model.TournamentId,
-                    Name = model.Name,
-                    FatherName = model.FatherName,
-                    GenderId = model.GenderId,
-                    MobileNo = model.MobileNo,
-                    Email = model.Email,
-                    Dob = model.Dob,
-                    CatId = model.CatId,
-                    WeightCatId = model.WeightCatId,
-                    DistrictId = district.DistictId, 
-                    ClubName = model.ClubName,
-                    AdharNumb = model.AdharNumb,
-                    Address = model.Address,
-                    Remarks = model.Remarks,
-                    IsVerified = false,
-                    IsActive = model.IsActive,
-                    AddedDt = DateTime.Now,
-                    AddedBy = User.Identity?.Name ?? "admin",
-                    CategoryName = category.CategoryName,
-                    District = district.DistictName,
-                    Gender = gender.GenderName,
-                    WeighCatName = weightcategory.WeightCatName,
-                    Photo = photoBytes
-                };
+            {
+                TrId = model.TournamentId,
+                Name = model.Name,
+                FatherName = model.FatherName,
+                GenderId = model.GenderId,
+                MobileNo = model.MobileNo,
+                Email = model.Email,
+                Dob = model.Dob,
+                CatId = model.CatId,
+                WeightCatId = model.WeightCatId,
+                DistrictId = district.DistictId,
+                ClubName = model.ClubName,
+                AdharNumb = model.AdharNumb,
+                Address = model.Address,
+                Remarks = model.Remarks,
+                IsVerified = false,
+                IsActive = model.IsActive,
+                AddedDt = DateTime.Now,
+                AddedBy = User.Identity?.Name ?? "admin",
+                CategoryName = category.CategoryName,
+                District = district.DistictName,
+                Gender = gender.GenderName,
+                WeighCatName = weightcategory.WeightCatName,
+                Photo = photoBytes
+            };
 
-                _context.TblTournamentUserRegs.Add(entity);
-                await _context.SaveChangesAsync();
-                string token = UrlEncryptionHelper.Encrypt(model.TournamentId.ToString());
+            _context.TblTournamentUserRegs.Add(entity);
+            await _context.SaveChangesAsync();
+            string token = UrlEncryptionHelper.Encrypt(model.TournamentId.ToString());
 
 
             byte[] idCardPdf = GenerateIdCardPdf(model, photoBytes, tournament.Logo1, tournament.Logo2,
                 weightcategory.WeightCatName, gender.GenderName);
-            await SendEmailAsync(model.Email, idCardPdf, model);
+            await SendEmailAsync(model.Email, idCardPdf, model, tournament.TournamentName);
             TempData["Success"] = "Player registered successfully!";
 
-            return RedirectToAction("Register", new {token = token});
+            return RedirectToAction("Register", new { token = token });
+
 
         }
+
+
         private byte[] GenerateIdCardPdf(PlayerViewModel model, byte[] photoBytes, byte[] Logo1, byte[] Logo2,
             string argWeightCat, string argGender)
         {
             string base64Image = photoBytes != null
-                ? $"data:image/jpeg;base64,{Convert.ToBase64String(photoBytes)}"
-                : "";
+            ? $"data:image/jpeg;base64,{Convert.ToBase64String(photoBytes)}"
+            : "";
             string base64ImageLogo1 = Logo1 != null
                 ? $"data:image/jpeg;base64,{Convert.ToBase64String(Logo1)}"
                 : "";
@@ -414,28 +416,13 @@ label.checkbox-label {{
 </body>
 </html>";
 
-            var doc = new HtmlToPdfDocument
-            {
-                GlobalSettings = new GlobalSettings
-                {
-                    ColorMode = ColorMode.Color,
-                    Orientation = Orientation.Portrait,
-                    PaperSize = PaperKind.A4
-                },
-                Objects = {
-                new ObjectSettings
-                {
-                    PagesCount = true,
-                    HtmlContent = htmlContent,
-                    WebSettings = { DefaultEncoding = "utf-8" }
-                }
-            }
-            };
-
-            return _converter.Convert(doc);
+            var Renderer = new IronPdf.HtmlToPdf();
+            var pdf = Renderer.RenderHtmlAsPdf(htmlContent);
+            return pdf.BinaryData;
         }
 
-        private async Task SendEmailAsync(string toEmail, byte[] pdfBytes, PlayerViewModel model)
+        private async Task SendEmailAsync(string toEmail, byte[] pdfBytes, PlayerViewModel model, string tournamentName)
+
         {
             var smtpServer = _config["EmailSettings:SmtpServer"];
             var port = int.Parse(_config["EmailSettings:Port"]);
@@ -453,17 +440,19 @@ label.checkbox-label {{
             {
                 From = new MailAddress(fromEmail),
                 Subject = $"Registration Successful - Online Entry " + model.Name,
-                Body = $"Thank you for registering!" + ViewData["TournamentName"] + ". Your Online Entry form is attached.",
+                Body = $"Thank you for registering for {tournamentName}. Your Online Entry form is attached.",
                 IsBodyHtml = true
             };
             mailMessage.To.Add(toEmail);
 
             using var stream = new MemoryStream(pdfBytes);
             stream.Position = 0;
-            var attachment = new Attachment(stream, "OnlineRegistration_" + model.Name+".pdf", "application/pdf");
+            var attachment = new Attachment(stream, "OnlineRegistration_" + model.Name + ".pdf", "application/pdf");
             mailMessage.Attachments.Add(attachment);
 
+
             await smtpClient.SendMailAsync(mailMessage);
+
         }
     }
 }
