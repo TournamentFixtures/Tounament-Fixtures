@@ -6,9 +6,17 @@ using Microsoft.EntityFrameworkCore;
 using System.Net.Mail;
 using System.Net;
 using Tounaent_Fixtures.Models;
-using IronPdf;
+//using IronPdf;
 using System;
 using DocumentFormat.OpenXml.Packaging;
+
+using System.Threading.Tasks;
+//using PuppeteerSharp;
+//using MimeKit;
+//using MailKit.Net.Smtp;
+//using DinkToPdf.Contracts;
+//using DinkToPdf;
+
 
 namespace Tounaent_Fixtures.Controllers
 {
@@ -17,11 +25,12 @@ namespace Tounaent_Fixtures.Controllers
         private readonly IConfiguration _config;
         private readonly ApplicationDbContext _context;
         private static readonly object _pdfLock = new();
-
+		// private readonly IConverter _converter;
 
         public PlayerRegistration(IConfiguration config, ApplicationDbContext context)
         {
             _config = config;
+           // _converter = converter; IConverter converter,
             _context = context;
         }
 
@@ -101,9 +110,6 @@ namespace Tounaent_Fixtures.Controllers
 
         }
 
-
-
-
         private async Task<List<SelectListItem>> GetGendersAsync()
         {
             return await _context.Gender
@@ -119,7 +125,7 @@ namespace Tounaent_Fixtures.Controllers
         public async Task<IActionResult> GetCategoryByGenderAndAge(int genderId, int age)
         {
             string categoryName;
-            if (age < 7) categoryName = "PeeWee";
+            if (age < 7) categoryName = "Kids";
             else if (age < 11) categoryName = "SubJunior";
             else if (age < 14) categoryName = "Cadet";
             else if (age < 17) categoryName = "Junior";
@@ -228,7 +234,7 @@ namespace Tounaent_Fixtures.Controllers
                 ClubName = model.ClubName,
                 AdharNumb = model.AdharNumb,
                 Address = model.Address,
-                Remarks = model.Remarks,
+                Remarks = Convert.ToString("TNTA_SLM_"+model.Id+1),
                 IsVerified = false,
                 IsActive = model.IsActive,
                 AddedDt = DateTime.Now,
@@ -237,7 +243,8 @@ namespace Tounaent_Fixtures.Controllers
                 District = district.DistictName,
                 Gender = gender.GenderName,
                 WeighCatName = weightcategory.WeightCatName,
-                Photo = photoBytes
+                Photo = photoBytes,
+                
             };
 
             _context.TblTournamentUserRegs.Add(entity);
@@ -247,7 +254,8 @@ namespace Tounaent_Fixtures.Controllers
 
             //byte[] idCardPdf = GenerateIdCardPdf(model, photoBytes, tournament.Logo1, tournament.Logo2,
             //    weightcategory.WeightCatName, gender.GenderName);
-            //await SendEmailAsync(model.Email, idCardPdf, model, tournament.TournamentName);
+            await SendEmailAsync(model.Email, model, tournament.TournamentName);
+
             TempData["Success"] = "Player registered successfully!";
 
             return RedirectToAction("Register", new { token = token });
@@ -255,8 +263,7 @@ namespace Tounaent_Fixtures.Controllers
 
         }
 
-
-        private byte[] GenerateIdCardPdf(PlayerViewModel model, byte[] photoBytes, byte[] Logo1, byte[] Logo2,
+        private string GenerateIdCardPdf(PlayerViewModel model, byte[] photoBytes, byte[] Logo1, byte[] Logo2,
             string argWeightCat, string argGender)
         {
             string base64Image = photoBytes != null
@@ -416,12 +423,55 @@ label.checkbox-label {{
 </body>
 </html>";
 
-            var Renderer = new IronPdf.HtmlToPdf();
-            var pdf = Renderer.RenderHtmlAsPdf(htmlContent);
-            return pdf.BinaryData;
+            //var Renderer = new IronPdf.HtmlToPdf();
+            //var pdf = Renderer.RenderHtmlAsPdf(htmlContent);
+            //return pdf.BinaryData;
+
+            //var doc = new HtmlToPdfDocument
+            //{
+            //    GlobalSettings = new GlobalSettings
+            //    {
+            //        ColorMode = ColorMode.Color,
+            //        Orientation = Orientation.Portrait,
+            //        PaperSize = PaperKind.A4
+            //    },
+            //    Objects = {
+            //    new ObjectSettings
+            //    {
+            //        PagesCount = true,
+            //        HtmlContent = htmlContent,
+            //        WebSettings = { DefaultEncoding = "utf-8" }
+            //    }
+            //    }
+            //};
+
+          //  return _converter.Convert(doc);
+
+            // Step 1: Read the HTML content
+            string htmlBody = htmlContent;
+
+            // Step 2: Prepare the email
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress("tournamentfixtures@gmail.com");
+            mail.To.Add("gopinathbajaj@gmail.com");
+            mail.Subject = "Your Invoice Page";
+            mail.Body = htmlBody;
+            mail.IsBodyHtml = true; // Important to enable HTML rendering
+          
+
+            // Step 3: SMTP settings
+            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+            smtp.Credentials = new NetworkCredential("tournamentfixtures@gmail.com", "mhsk dylu ohun cqtc");
+            smtp.EnableSsl = true;
+
+            // Step 4: Send
+            smtp.Send(mail);
+
+            return "Siuccess";
+
         }
 
-        private async Task SendEmailAsync(string toEmail, byte[] pdfBytes, PlayerViewModel model, string tournamentName)
+        private async Task SendEmailAsync(string toEmail, PlayerViewModel model, string tournamentName)
 
         {
             var smtpServer = _config["EmailSettings:SmtpServer"];
@@ -440,15 +490,24 @@ label.checkbox-label {{
             {
                 From = new MailAddress(fromEmail),
                 Subject = $"Registration Successful - Online Entry " + model.Name,
-                Body = $"Thank you for registering for {tournamentName}. Your Online Entry form is attached.",
+                Body = $"Thank you for registering for {tournamentName}. Your Online Entry is successfully created.<br /><br />" +
+                $"Register Name : {model.Name} <br /> " +
+                $"Father Name   : {model.FatherName} <br />" +
+                $"Gender        : {model.Gender} <br />" +
+                $"Date Of Birth : {model.Dob} <br />" +
+                $"Weigt Category : {model.CategoryName} <br />" +
+                $"Local Club Name : {model.ClubName}<br />" +
+                $"Email ID        : {model.Email}<br />" +
+                $"Mobile No       : {model.MobileNo}<br />" +
+                $"Registration Reference : {model.Remarks}<br />",
                 IsBodyHtml = true
             };
             mailMessage.To.Add(toEmail);
 
-            using var stream = new MemoryStream(pdfBytes);
-            stream.Position = 0;
-            var attachment = new Attachment(stream, "OnlineRegistration_" + model.Name + ".pdf", "application/pdf");
-            mailMessage.Attachments.Add(attachment);
+            //using var stream = new MemoryStream(pdfBytes);
+            //stream.Position = 0;
+            //var attachment = new Attachment(stream, "OnlineRegistration_" + model.Name + ".pdf", "application/pdf");
+            //mailMessage.Attachments.Add(attachment);
 
 
             await smtpClient.SendMailAsync(mailMessage);
