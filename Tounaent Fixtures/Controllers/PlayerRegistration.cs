@@ -193,7 +193,7 @@ namespace Tounaent_Fixtures.Controllers
                 .Where(c => c.GenId == model.GenderId && c.CategoryName == model.CategoryName && c.IsActive)
                 .FirstOrDefaultAsync();
             var club = await _context.TblDistLocalClubs
-                .Where(c => c.ClubId == model.ClubId).FirstOrDefaultAsync();
+                .Where(c => c.ClubId == model.ClubId).OrderBy(x=>x.LocalClubName).FirstOrDefaultAsync();
             var district = await _context.TblDistricts
                 .Where(d => d.DistictId == tournament.DistictId).FirstOrDefaultAsync();
             var weightcategory = await _context.TblWeightCategory
@@ -233,7 +233,7 @@ namespace Tounaent_Fixtures.Controllers
                 ClubName = model.ClubName,
                 AdharNumb = model.AdharNumb,
                 Address = model.Address,
-                Remarks = Convert.ToString("TNTA_SLM_"+model.Id+1),
+                Remarks = Convert.ToString("TNTA_SLM_"+  +1),
                 IsVerified = false,
                 IsActive = model.IsActive,
                 AddedDt = DateTime.Now,
@@ -248,12 +248,21 @@ namespace Tounaent_Fixtures.Controllers
 
             _context.TblTournamentUserRegs.Add(entity);
             await _context.SaveChangesAsync();
+
+            var inserted = await _context.TblTournamentUserRegs
+    .Where(x => x.Name == entity.Name && x.MobileNo == entity.MobileNo)
+    .OrderByDescending(x => x.TrUserId)
+    .FirstOrDefaultAsync();
+            if (inserted != null) {
+                entity.Remarks = Convert.ToString("TNTA_SLM_" + inserted.TrUserId);
+                await _context.SaveChangesAsync();
+            }
             string token = UrlEncryptionHelper.Encrypt(model.TournamentId.ToString());
 
 
             //byte[] idCardPdf = GenerateIdCardPdf(model, photoBytes, tournament.Logo1, tournament.Logo2,
             //    weightcategory.WeightCatName, gender.GenderName);
-            await SendEmailAsync(model.Email, model, tournament.TournamentName);
+            await SendEmailAsync(model.Email, model, tournament.TournamentName, entity.Remarks);
 
             TempData["Success"] = "Player registered successfully!";
 
@@ -470,7 +479,7 @@ label.checkbox-label {{
 
         }
 
-        private async Task SendEmailAsync(string toEmail, PlayerViewModel model, string tournamentName)
+        private async Task SendEmailAsync(string toEmail, PlayerViewModel model, string tournamentName, string Remarks)
 
         {
             var smtpServer = _config["EmailSettings:SmtpServer"];
@@ -498,7 +507,7 @@ label.checkbox-label {{
                 $"Local Club Name : {model.ClubName}<br />" +
                 $"Email ID        : {model.Email}<br />" +
                 $"Mobile No       : {model.MobileNo}<br />" +
-                $"Registration Reference : {model.Remarks}<br />",
+                $"Registration Reference : {Remarks}<br />",
                 IsBodyHtml = true
             };
             mailMessage.To.Add(toEmail);
