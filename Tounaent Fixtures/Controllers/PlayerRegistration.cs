@@ -264,7 +264,7 @@ namespace Tounaent_Fixtures.Controllers
 
             //byte[] idCardPdf = GenerateIdCardPdf(model, photoBytes, tournament.Logo1, tournament.Logo2,
             //    weightcategory.WeightCatName, gender.GenderName);
-            await SendEmailAsync(model.Email, model, tournament.TournamentName, entity.Remarks);
+            await SendEmailAsync(model.Email, model, tournament.TournamentName, entity.Remarks, weightcategory.WeightCatName);
 
             TempData["Success"] = "Player registered successfully! Email Send.";
 
@@ -481,7 +481,7 @@ label.checkbox-label {{
 
         }
 
-        private async Task SendEmailAsync(string toEmail, PlayerViewModel model, string tournamentName, string Remarks)
+        private async Task SendEmailAsync(string toEmail, PlayerViewModel model, string tournamentName, string Remarks, string WeighCatName)
 
         {
             var smtpServer = _config["EmailSettings:SmtpServer"];
@@ -505,7 +505,7 @@ label.checkbox-label {{
                 $"Father Name   : {model.FatherName} <br />" +
                 $"Gender        : {model.Gender} <br />" +
                 $"Date Of Birth : {model.Dob.ToString("dd-MM-yyyy")} <br />" +
-                $"Weigt Category : {model.CategoryName} <br />" +
+                $"Weigt Category : {model.CategoryName} - {WeighCatName} <br />" +
                 $"Local Club Name : {model.ClubName}<br />" +
                 $"Email ID        : {model.Email}<br />" +
                 $"Mobile No       : {model.MobileNo}<br />" +

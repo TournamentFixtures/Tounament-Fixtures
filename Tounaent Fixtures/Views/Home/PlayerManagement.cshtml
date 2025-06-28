@@ -4,31 +4,33 @@
 }
 
 <h2>Player Management</h2>
-
+<form asp-controller="Home" asp-action="ExportPlayerToExcel" method="post" style="display:inline;">
+    <button type="submit" class="btn btn-outline-success mb-3">Export to Excel</button>
+</form>
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>User ID</th>
-      <th>Tournament Id</th>
-      <th>Name</th>
-      <th>Father Name</th>
+      @* <th>User ID</th>
+      <th>Tournament Id</th> *@
+      <th>Player Name</th>
+      <th>Parent Name</th>
       <th>Gender</th>
-      <th>Mobile Number</th>
+      <th>Mobile No</th>
       <th>Email</th>
       <th>DOB</th>
-      <th>Category Name</th>
-      <th>Weight Category Name</th>
+      <th>Category</th>
+      <th>Weight Category </th>
       <th>District</th>
       <th>Club Name</th>
-      <th>Address</th>
+      <th>Remarks</th>
         </tr>
     </thead>
     <tbody>
     @foreach (var item in Model)
     {
         <tr data-id="@item.TrUserId">
-            <td>@item.TrUserId</td>
-            <td>@item.TrId</td>
+           @*  <td>@item.TrUserId</td>
+            <td>@item.TrId</td> *@
     <td>@(item.Name ?? "-")</td>
     <td>@(item.FatherName ?? "-")</td>
     <td>@(item.Gender ?? "-")</td>
@@ -39,16 +41,14 @@
     <td>@(item.WeighCatName ?? "-")</td>
     <td>@(item.District ?? "-")</td>
     <td>@(item.ClubName ?? "-")</td>
-    <td>@(item.Address ?? "-")</td>
+    <td>@(item.Remarks ?? "-")</td>
 
         </tr>
     }
 </tbody>
 
 </table>
-<form asp-controller="Home" asp-action="ExportPlayerToExcel" method="post" style="display:inline;">
-    <button type="submit" class="btn btn-outline-success mb-3">Export to Excel</button>
-</form>
+
 
 @section Scripts {
     <script>

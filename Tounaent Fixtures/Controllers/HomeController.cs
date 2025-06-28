@@ -48,7 +48,8 @@ namespace Tounaent_Fixtures.Controllers
                     WeighCatName = p.WeighCatName,
                     District = p.District,
                     ClubName = p.ClubName,
-                    Address = p.Address
+                    Address = p.Address,
+                    Remarks = p.Remarks
                 })
                 .ToListAsync();
             return View(players);
@@ -205,7 +206,8 @@ namespace Tounaent_Fixtures.Controllers
                         WeighCatName = p.WeighCatName,
                         District = p.District,
                         ClubName = p.ClubName,
-                        Address = p.Address
+                        //Address = p.Address,
+                        Remarks = p.Remarks
                     })
                     .ToListAsync();
             var columns = new Dictionary<string, Func<PlayerExportViewModel, object>>
@@ -222,7 +224,7 @@ namespace Tounaent_Fixtures.Controllers
                 { "Weight Category Name", d => d.WeighCatName},
                 { "District", d => d.District },
                 { "Club Name", d => d.ClubName },
-                { "Address", d => d.Address }
+                { "Remarks", d => d.Remarks }
     };
 
             byte[] excelBytes = ExcelExportHelper.ExportToExcel(players, columns, "Players");

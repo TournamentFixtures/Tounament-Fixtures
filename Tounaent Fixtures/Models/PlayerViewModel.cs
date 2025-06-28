@@ -51,10 +51,10 @@ namespace Tounaent_Fixtures.Models
             {
                 var age = Age;
                 if (age < 7) return "Kids";
-                else if (age < 11) return "SubJunior";
-                else if (age < 14) return "Cadet";
-                else if (age < 17) return "Junior";
-                else if (age >= 17) return "Senior";
+                else if (age <= 11) return "SubJunior";
+                else if (age <= 14) return "Cadet";
+                else if (age <= 17) return "Junior";
+                else if (age > 17) return "Senior";
                 else return "---Select Category---";
             }
         }
@@ -108,6 +108,8 @@ namespace Tounaent_Fixtures.Models
         public string? District { get; set; }
         public string? ClubName { get; set; }
         public string? Address { get; set; }
+
+        public string? Remarks { get; set; }
     }
 
 }
