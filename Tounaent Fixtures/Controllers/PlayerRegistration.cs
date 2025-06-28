@@ -10,6 +10,8 @@ using System;
 using DocumentFormat.OpenXml.Packaging;
 
 using System.Threading.Tasks;
+using System.Data.Common;
+using System.Data;
 //using PuppeteerSharp;
 //using MimeKit;
 //using MailKit.Net.Smtp;
@@ -125,10 +127,10 @@ namespace Tounaent_Fixtures.Controllers
         {
             string categoryName;
             if (age < 7) categoryName = "Kids";
-            else if (age < 11) categoryName = "SubJunior";
-            else if (age < 14) categoryName = "Cadet";
-            else if (age < 17) categoryName = "Junior";
-            else if (age >= 17) categoryName = "Senior";
+            else if (age <= 11) categoryName = "SubJunior";
+            else if (age <= 14) categoryName = "Cadet";
+            else if (age <= 17) categoryName = "Junior";
+            else if (age > 17) categoryName = "Senior";
             else categoryName = "---Select Category---";
 
             var category = await _context.TblCategory
@@ -264,7 +266,7 @@ namespace Tounaent_Fixtures.Controllers
             //    weightcategory.WeightCatName, gender.GenderName);
             await SendEmailAsync(model.Email, model, tournament.TournamentName, entity.Remarks);
 
-            TempData["Success"] = "Player registered successfully!";
+            TempData["Success"] = "Player registered successfully! Email Send.";
 
             return RedirectToAction("Register", new { token = token });
 
@@ -498,11 +500,11 @@ label.checkbox-label {{
             {
                 From = new MailAddress(fromEmail),
                 Subject = $"Registration Successful - Online Entry " + model.Name,
-                Body = $"Thank you for registering for {tournamentName}. Your Online Entry is successfully created.<br /><br />" +
+                Body = $"Thank you for registering for {tournamentName} <br /><br />. Your Online Entry is successfully created.<br /><br />" +
                 $"Register Name : {model.Name} <br /> " +
                 $"Father Name   : {model.FatherName} <br />" +
                 $"Gender        : {model.Gender} <br />" +
-                $"Date Of Birth : {model.Dob} <br />" +
+                $"Date Of Birth : {model.Dob.ToString("dd-MM-yyyy")} <br />" +
                 $"Weigt Category : {model.CategoryName} <br />" +
                 $"Local Club Name : {model.ClubName}<br />" +
                 $"Email ID        : {model.Email}<br />" +
@@ -521,5 +523,6 @@ label.checkbox-label {{
             await smtpClient.SendMailAsync(mailMessage);
 
         }
+
     }
 }
