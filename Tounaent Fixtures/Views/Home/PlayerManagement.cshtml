@@ -1,53 +1,76 @@
 ﻿@model List<PlayerExportViewModel>
 @{
     ViewData["Title"] = "Player Management";
+    var selectedTournament = ViewBag.SelectedTournament?.ToString();
+    var tournaments = ViewBag.Tournaments as List<SelectListItem>;
 }
 
 <h2>Player Management</h2>
+
+<form method="get" asp-controller="Home" asp-action="PlayerManagement" class="mb-3">
+    <div class="form-group row">
+        <label for="tournamentId" class="col-sm-2 col-form-label">Filter by Tournament:</label>
+        <div class="col-sm-6">
+            <select id="tournamentId" name="tournamentId" class="form-control" onchange="this.form.submit()">
+                <option value="">-- All Tournaments --</option>
+                @foreach (var tournament in tournaments)
+                {
+                    if (tournament.Value == selectedTournament)
+                    {
+                        <option value="@tournament.Value" selected>@tournament.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@tournament.Value">@tournament.Text</option>
+                    }
+                }
+
+            </select>
+        </div>
+    </div>
+</form>
+
 <form asp-controller="Home" asp-action="ExportPlayerToExcel" method="post" style="display:inline;">
+    <input type="hidden" name="tournamentId" value="@ViewBag.SelectedTournament" />
     <button type="submit" class="btn btn-outline-success mb-3">Export to Excel</button>
 </form>
-<table class="table table-bordered">
-    <thead>
+
+<table class="table table-bordered table-responsive">
+    <thead class="thead-dark">
         <tr>
-      @* <th>User ID</th>
-      <th>Tournament Id</th> *@
-      <th>Player Name</th>
-      <th>Parent Name</th>
-      <th>Gender</th>
-      <th>Mobile No</th>
-      <th>Email</th>
-      <th>DOB</th>
-      <th>Category</th>
-      <th>Weight Category </th>
-      <th>District</th>
-      <th>Club Name</th>
-      <th>Remarks</th>
+            <th>Player Name</th>
+            <th>Parent Name</th>
+            <th>Gender</th>
+            <th>Mobile No</th>
+            <th>Email</th>
+            <th>DOB</th>
+            <th>Category</th>
+            <th>Weight Category</th>
+            <th>District</th>
+            <th>Club Name</th>
+            <th>Remarks</th>
         </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model)
-    {
-        <tr data-id="@item.TrUserId">
-           @*  <td>@item.TrUserId</td>
-            <td>@item.TrId</td> *@
-    <td>@(item.Name ?? "-")</td>
-    <td>@(item.FatherName ?? "-")</td>
-    <td>@(item.Gender ?? "-")</td>
-    <td>@(item.MobileNo ?? "-")</td>
-    <td>@(item.Email ?? "-")</td>
-    <td>@(item.Dob)</td>
-    <td>@(item.CategoryName ?? "-")</td>
-    <td>@(item.WeighCatName ?? "-")</td>
-    <td>@(item.District ?? "-")</td>
-    <td>@(item.ClubName ?? "-")</td>
-    <td>@(item.Remarks ?? "-")</td>
-
-        </tr>
-    }
-</tbody>
-
+        @foreach (var item in Model)
+        {
+            <tr data-id="@item.TrUserId">
+                <td>@(item.Name ?? "-")</td>
+                <td>@(item.FatherName ?? "-")</td>
+                <td>@(item.Gender ?? "-")</td>
+                <td>@(item.MobileNo ?? "-")</td>
+                <td>@(item.Email ?? "-")</td>
+                <td>@(item.Dob?.ToString("dd-MM-yyyy") ?? "-")</td>
+                <td>@(item.CategoryName ?? "-")</td>
+                <td>@(item.WeighCatName ?? "-")</td>
+                <td>@(item.District ?? "-")</td>
+                <td>@(item.ClubName ?? "-")</td>
+                <td>@(item.Remarks ?? "-")</td>
+            </tr>
+        }
+    </tbody>
 </table>
+
 
 
 @section Scripts {
