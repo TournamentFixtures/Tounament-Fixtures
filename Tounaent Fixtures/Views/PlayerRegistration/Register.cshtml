@@ -177,11 +177,21 @@
             <input asp-for="Email" class="form-control" type="email" class="text-danger" required />
             @* <span asp-validation-for="Email" class="text-danger"></span> *@
         </div>
-
-
         <div class="col-md-12 text-center">
-            <button type="submit" class="btn btn-primary mt-3 px-5">Register</button>
+            <div id="loader" style="display:none; text-align:center; margin-bottom:10px;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div>Please wait...</div>
+            </div>
+
+            <div class="col-md-12 text-center">
+                <button id="registerButton" type="submit" class="btn btn-primary mt-3 px-5">Register</button>
+            </div>
         </div>
+
+
+        
     </div>
     <div>
         <br />
@@ -193,6 +203,7 @@
         </footer>
     </div>
 </form>
+
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
@@ -212,7 +223,18 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            const loader = document.getElementById("loader");
 
+            if (form) {
+                form.addEventListener("submit", function () {
+                    loader.style.display = "block";  // Show loader
+                });
+            }
+        });
+    </script>
     <script>
         // 📸 Photo Preview Logic
         function previewPhoto(input) {
