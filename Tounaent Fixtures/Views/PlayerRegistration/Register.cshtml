@@ -224,13 +224,16 @@
         });
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("DOMContentLoaded", function () {
             const form = document.querySelector("form");
             const loader = document.getElementById("loader");
+            const registerButton = document.getElementById("registerButton");
 
             if (form) {
                 form.addEventListener("submit", function () {
-                    loader.style.display = "block";  // Show loader
+                    loader.style.display = "block";          // Show loader
+                    registerButton.disabled = true;          // Disable button
+                    registerButton.innerText = "Registering..."; // Optional: Show progress text
                 });
             }
         });
