@@ -39,7 +39,7 @@ public partial class TblTournamentUserReg
 
     public string ClubName { get; set; } = null!;
 
-    public string AdharNumb { get; set; } = "null"!;
+    public string AdharNumb { get; set; }
 
     public string Address { get; set; } = null!;
 
