@@ -170,6 +170,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnName("To_dt");
             entity.Property(e => e.TournamentName).HasMaxLength(255);
             entity.Property(e => e.Venue).HasMaxLength(255);
+            entity.Property(e => e.MatchType).HasMaxLength(1);
         });
         modelBuilder.Entity<Gender>(entity =>
         {

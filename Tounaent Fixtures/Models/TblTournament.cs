@@ -36,4 +36,5 @@ public partial class TblTournament
 
     public string? URL { get; set; }
 
+    public string? MatchType { get; set; }
 }
