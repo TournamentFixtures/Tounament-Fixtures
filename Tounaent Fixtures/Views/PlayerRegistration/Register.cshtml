@@ -140,6 +140,15 @@
             </select>
             <span asp-validation-for="WeightCatId" class="text-danger"></span>
         </div>
+        <div class="mb-3" id="weightField" style="display: none;">
+            <label asp-for="weight" class="form-label">Weight</label>
+            <input asp-for="weight" class="form-control" id="weight" />
+            <span asp-validation-for="weight" class="text-danger"></span>
+        </div>
+
+
+
+
 
         <!-- District (readonly) -->
         <div class="col-md-6">
@@ -171,6 +180,12 @@
             <input asp-for="MobileNo" class="form-control" />
             <span asp-validation-for="MobileNo" class="text-danger"></span>
         </div>
+        <div class="form-group">
+            <label for="AdharNumb">Aadhaar Number</label>
+            <input asp-for="AdharNumb" class="form-control" maxlength="12" />
+            <span asp-validation-for="AdharNumb" class="text-danger"></span>
+        </div>
+
 
         <div class="col-md-6">
             <label asp-for="Email" class="form-label"></label>
@@ -208,7 +223,7 @@
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
     <script>
-        $(document).ready(function () {
+                $(document).ready(function () {
             const toastEl = $('#toast-message');
             const msg = toastEl.data('message');
 
@@ -261,7 +276,7 @@
         }
 
         // 🧠 Fetch Category + Weight Category based on gender and DOB
-        function fetchCategoryAndWeight() {
+                function fetchCategoryAndWeight() {
             const genderId = $("input[name='GenderId']:checked").val();
             const dob = $("#dob").val();
             if (!genderId || !dob) return;
@@ -277,10 +292,22 @@
                         $("#categoryName").val(data.categoryName);
                         $("#CatId").val(data.catId);
                         fetchWeightCategories(data.catId);
+
+                        // ✅ Show/hide weightField here
+                        const category = data.categoryName.toLowerCase();
+                        if (category === 'kids' || category === 'peewee') {
+                            $('#weightField').show();
+                        } else {
+                            $('#weightField').hide();
+                            $('#weight').val('');
+                        }
+
                     } else {
                         $("#categoryName").val("No category found");
                         $("#CatId").val("");
                         $("#weightCatDropdown").empty().append('<option value="">-- Select Weight Category --</option>');
+                        $('#weightField').hide();
+                        $('#weight').val('');
                     }
                 },
                 error: function (xhr) {
@@ -289,6 +316,7 @@
                 }
             });
         }
+
 
         // 🏋️ Fetch Weight Categories for given Category
         function fetchWeightCategories(catId) {

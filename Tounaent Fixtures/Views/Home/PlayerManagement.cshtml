@@ -35,7 +35,7 @@
     <button type="submit" class="btn btn-outline-success mb-3">Export to Excel</button>
 </form>
 
-<table class="table table-bordered table-responsive">
+<table id="playerTable" class="table table-bordered display">
     <thead class="thead-dark">
         <tr>
             <th>Player Name</th>
@@ -72,9 +72,17 @@
 </table>
 
 
-
 @section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
     <script>
-       
+        $(document).ready(function () {
+            $('#playerTable').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true
+            });
+        });
     </script>
 }

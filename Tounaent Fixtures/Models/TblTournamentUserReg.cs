@@ -56,6 +56,8 @@ public partial class TblTournamentUserReg
     public DateTime? ModifyDt { get; set; }
 
     public string? ModifyBy { get; set; }
-    public byte[]? Photo { get; set; } // Nullable if not mandatory
 
+    public byte[]? Photo { get; set; }
+
+    public int? Weight { get; set; }
 }

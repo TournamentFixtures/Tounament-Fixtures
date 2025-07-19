@@ -91,6 +91,8 @@ namespace Tounaent_Fixtures.Models
         public bool IsActive { get; set; } = true;
 
         public int TournamentId { get; set; }
+        public int? weight { get; set; }
+
 
     }
     public class PlayerExportViewModel
@@ -110,6 +112,8 @@ namespace Tounaent_Fixtures.Models
         public string? Address { get; set; }
 
         public string? Remarks { get; set; }
+
+        public int? weight { get; set; }
     }
 
 }

@@ -134,6 +134,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.WeighCatName)
                 .HasMaxLength(50)
                 .HasColumnName("Weigh_Cat_Name");
+            entity.Property(e => e.Weight).HasColumnName("weight");
             entity.Property(e => e.WeightCatId).HasColumnName("Weight_Cat_id");
         });
         modelBuilder.Entity<TblTournament>(entity =>

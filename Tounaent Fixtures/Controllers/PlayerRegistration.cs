@@ -163,7 +163,16 @@ namespace Tounaent_Fixtures.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(PlayerViewModel model, int tr_id)
         {
+            if (!string.IsNullOrWhiteSpace(model.AdharNumb))
+            {
+                bool exists = await _context.TblTournamentUserRegs
+                    .AnyAsync(p => p.AdharNumb == model.AdharNumb);
 
+                if (exists)
+                {
+                    ModelState.AddModelError("AadhaarNumber", "This Aadhaar number is already registered.");
+                }
+            }
 
             // Reload dropdowns on POST
             model.GenderOptions = await GetGendersAsync();
@@ -247,6 +256,14 @@ namespace Tounaent_Fixtures.Controllers
                 Photo = photoBytes,
                 
             };
+            if ((model.CategoryName?.ToLower() == "kids" || model.CategoryName?.ToLower() == "peewee") && model.weight != null)
+            {
+                entity.Weight = model.weight;
+            }
+            else
+            {
+                entity.Weight = null;
+            }
 
             _context.TblTournamentUserRegs.Add(entity);
             await _context.SaveChangesAsync();
