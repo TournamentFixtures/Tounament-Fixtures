@@ -189,9 +189,10 @@
             }
 
             let category = '';
-            if (age < 12) category = 'Sub Junior';
-            else if (age >= 12 && age < 16) category = 'Junior';
-            else if (age >= 16 && age < 20) category = 'Cadet';
+            if (age < 7) category = 'Kids';
+            else if (age >= 7 && age <= 11) category = 'SubJunior';
+            else if (age >= 12 && age <= 14) category = 'Cadet';
+            else if (age >= 15 && age <= 17) category = 'Junior';
             else category = 'Senior';
 
             document.getElementById('category').value = category;

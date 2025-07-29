@@ -31,11 +31,13 @@ public class RegisterViewModel
     {
         get
         {
+
             var age = Age;
-            if (age < 12) return "Sub Junior";
-            if (age < 16) return "Junior";
-            if (age < 20) return "Cadet";
-            return "Senior";
+            if (age < 7) return "Kids";
+            if (age <= 11) return "SubJunior";
+            if (age <= 14) return "Cadet";
+            if (age <= 17) return "Junior";
+             return "Senior";
         }
     }
 
