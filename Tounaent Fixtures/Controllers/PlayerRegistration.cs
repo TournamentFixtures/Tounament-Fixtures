@@ -201,7 +201,7 @@ namespace Tounaent_Fixtures.Controllers
                 .Where(c => c.GenderId == model.GenderId)
                 .FirstOrDefaultAsync();
             var category = await _context.TblCategory
-                .Where(c => c.GenId == model.GenderId && c.CategoryName == model.CategoryName && c.IsActive)
+                .Where(c => c.CatId == model.CatId && c.IsActive)
                 .FirstOrDefaultAsync();
             var club = await _context.TblDistLocalClubs
                 .Where(c => c.ClubId == model.ClubId).OrderBy(x=>x.LocalClubName).FirstOrDefaultAsync();
