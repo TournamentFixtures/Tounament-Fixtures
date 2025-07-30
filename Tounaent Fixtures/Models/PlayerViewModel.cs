@@ -39,6 +39,8 @@ namespace Tounaent_Fixtures.Models
         public string Email { get; set; }
 
         [Required]
+        [Column(TypeName = "date")]
+
         public DateTime Dob { get; set; } = DateTime.Today;
         public int Age => Dob != null ? (int)((DateTime.Now - Dob).TotalDays / 365.25) : 0;
 

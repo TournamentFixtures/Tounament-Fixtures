@@ -65,7 +65,7 @@
 
 
 
-<form asp-action="Register" method="post" class="container" enctype="multipart/form-data">
+<form asp-action="Register" asp-route-token="@ViewData["Token"]" method="post" class="container" enctype="multipart/form-data">
     <div class="row g-3">
         <input type="hidden" asp-for="TournamentId" />
 
@@ -239,19 +239,26 @@
         });
     </script>
     <script>
-            document.addEventListener("DOMContentLoaded", function () {
-            const form = document.querySelector("form");
-            const loader = document.getElementById("loader");
-            const registerButton = document.getElementById("registerButton");
+        document.addEventListener("DOMContentLoaded", function () {
+                const form = document.querySelector("form");
+                const loader = document.getElementById("loader");
+                const registerButton = document.getElementById("registerButton");
 
-            if (form) {
-                form.addEventListener("submit", function () {
-                    loader.style.display = "block";          // Show loader
-                    registerButton.disabled = true;          // Disable button
-                    registerButton.innerText = "Registering..."; // Optional: Show progress text
-                });
-            }
-        });
+                if (form) {
+                    form.addEventListener("submit", function (e) {
+                        // if you’re using jQuery validation
+                        if ($(form).valid && !$(form).valid()) {
+                            e.preventDefault(); // stop submission if invalid
+                            return false;
+                        }
+
+                        // passed validation → show loader
+                        loader.style.display = "block";
+                        registerButton.disabled = true;
+                        registerButton.innerText = "Registering...";
+                    });
+                }
+            });
     </script>
     <script>
         // 📸 Photo Preview Logic
