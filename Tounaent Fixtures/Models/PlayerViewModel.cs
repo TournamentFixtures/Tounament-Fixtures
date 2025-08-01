@@ -95,6 +95,8 @@ namespace Tounaent_Fixtures.Models
         public int TournamentId { get; set; }
         public int? weight { get; set; }
 
+        public string? MatchType { get; set; }
+
 
     }
     public class PlayerExportViewModel

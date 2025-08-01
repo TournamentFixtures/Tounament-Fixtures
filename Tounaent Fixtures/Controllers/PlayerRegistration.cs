@@ -42,6 +42,7 @@ namespace Tounaent_Fixtures.Controllers
 			if (string.IsNullOrEmpty(token)) return BadRequest("Missing token");
 
 			int tr_id;
+			string matchtype = string.Empty;
 			try
 			{
 				var decrypted = UrlEncryptionHelper.Decrypt(token);
@@ -65,6 +66,7 @@ namespace Tounaent_Fixtures.Controllers
 			ViewData["Venue"] = tournament.Venue;
 			ViewData["Logo1"] = tournament.Logo1 != null ? $"data:image/png;base64,{Convert.ToBase64String(tournament.Logo1)}" : null;
 			ViewData["Logo2"] = tournament.Logo2 != null ? $"data:image/png;base64,{Convert.ToBase64String(tournament.Logo2)}" : null;
+			ViewData["matchtype"] = tournament.MatchType;
 
 			if (tournament.FromDt == tournament.ToDt)
 			{
@@ -79,9 +81,11 @@ namespace Tounaent_Fixtures.Controllers
 			{
 				TournamentId = tr_id,
 				GenderOptions = await GetGendersAsync(),
-				DistrictName = tournament.DistictName,
-				DistictId = (int)tournament.DistictId,
-				//DistrictOptions = await GetDistrictsAsync(),
+                MatchType =tournament.MatchType,
+
+    //            DistrictName = tournament.DistictName,
+				//DistictId = (int)tournament.DistictId,
+				DistrictOptions = await GetDistrictsAsync(),
 				ClubOptions = await GetClubsByDistrict((int)tournament.DistictId)
 			};
 
@@ -198,9 +202,10 @@ namespace Tounaent_Fixtures.Controllers
 						{
 							TournamentId = tr_id,
 							GenderOptions = await GetGendersAsync(),
+							MatchType=tournament1.MatchType,
 							DistrictName = tournament1.DistictName,
 							DistictId = (int)tournament1.DistictId,
-							//DistrictOptions = await GetDistrictsAsync(),
+							DistrictOptions = await GetDistrictsAsync(),
 							ClubOptions = await GetClubsByDistrict((int)tournament1.DistictId)
 						};
 
@@ -240,10 +245,27 @@ namespace Tounaent_Fixtures.Controllers
 				.FirstOrDefaultAsync();
 			var club = await _context.TblDistLocalClubs
 				.Where(c => c.ClubId == model.ClubId).OrderBy(x => x.LocalClubName).FirstOrDefaultAsync();
-			var district = await _context.TblDistricts
-				.Where(d => d.DistictId == tournament.DistictId).FirstOrDefaultAsync();
+			
 			var weightcategory = await _context.TblWeightCategory
 				.Where(w => w.WeightCatId == model.WeightCatId).FirstOrDefaultAsync();
+
+            var district = await _context.TblDistricts.FirstOrDefaultAsync();
+           // var district = await _context.TblDistricts.ToListAsync();
+           
+
+            if (tournament.MatchType=="State")
+			{
+				// district = await _context.TblDistricts.FirstOrDefaultAsync();
+				//.Where(d => d.DistictId == tournament.DistictId).FirstOrDefaultAsync();
+				//model.DistictId = district.DistictId;
+				//model.DistrictName = district.DistictName;
+            }
+			else
+			{
+                 district = await _context.TblDistricts
+              .Where(d => d.DistictId == tournament.DistictId).FirstOrDefaultAsync();
+            }
+			
 
 			if (category == null)
 			{
@@ -252,7 +274,12 @@ namespace Tounaent_Fixtures.Controllers
 			}
 
 			model.CatId = category.CatId;
-			model.ClubName = club.LocalClubName;
+			if (tournament.MatchType != "State")
+			{
+				model.ClubName = club.LocalClubName;
+			}
+			
+			
 			byte[]? photoBytes = null;
 			if (model.PhotoFile != null && model.PhotoFile.Length > 0)
 			{

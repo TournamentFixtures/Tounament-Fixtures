@@ -40,6 +40,8 @@ namespace Tounaent_Fixtures.Models
         [Display(Name = "Upload Logo2")]
         public IFormFile? Logo2 { get; set; }
 
+        public List<SelectListItem> MatchType { get; set; } = new();
+
     }
 
 }
