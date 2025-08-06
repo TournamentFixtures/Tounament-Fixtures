@@ -67,8 +67,10 @@ namespace Tounaent_Fixtures.Controllers
 			ViewData["Logo1"] = tournament.Logo1 != null ? $"data:image/png;base64,{Convert.ToBase64String(tournament.Logo1)}" : null;
 			ViewData["Logo2"] = tournament.Logo2 != null ? $"data:image/png;base64,{Convert.ToBase64String(tournament.Logo2)}" : null;
 			ViewData["matchtype"] = tournament.MatchType;
+			ViewData["TournamentStatus"] = Convert.ToString(tournament.IsActive);
 
-			if (tournament.FromDt == tournament.ToDt)
+
+            if (tournament.FromDt == tournament.ToDt)
 			{
 				ViewData["Date"] = tournament.FromDt?.ToString("dd-MM-yyyy");
 			}
@@ -83,8 +85,8 @@ namespace Tounaent_Fixtures.Controllers
 				GenderOptions = await GetGendersAsync(),
                 MatchType =tournament.MatchType,
 
-    //            DistrictName = tournament.DistictName,
-				//DistictId = (int)tournament.DistictId,
+				DistrictName = tournament.DistictName,
+				DistictId = (int)tournament.DistictId,
 				DistrictOptions = await GetDistrictsAsync(),
 				ClubOptions = await GetClubsByDistrict((int)tournament.DistictId)
 			};
@@ -101,7 +103,7 @@ namespace Tounaent_Fixtures.Controllers
 				{
 					Value = d.DistictId.ToString(),
 					Text = d.DistictName
-				}).ToListAsync();
+				}).OrderBy(d=>d.Text).ToListAsync();
 		}
 		public async Task<List<SelectListItem>> GetClubsByDistrict(int districtId)
 		{
@@ -249,10 +251,11 @@ namespace Tounaent_Fixtures.Controllers
 			var weightcategory = await _context.TblWeightCategory
 				.Where(w => w.WeightCatId == model.WeightCatId).FirstOrDefaultAsync();
 
-            var district = await _context.TblDistricts.FirstOrDefaultAsync();
-           // var district = await _context.TblDistricts.ToListAsync();
-           
+           // var district = await _context.TblDistricts.FirstOrDefaultAsync();
+            // var district = await _context.TblDistricts.ToListAsync();
 
+            var district = await _context.TblDistricts
+                .Where(d => d.DistictId == model.DistictId).FirstOrDefaultAsync();
             if (tournament.MatchType=="State")
 			{
 				// district = await _context.TblDistricts.FirstOrDefaultAsync();
@@ -336,7 +339,7 @@ namespace Tounaent_Fixtures.Controllers
 	.FirstOrDefaultAsync();
 			if (inserted != null)
 			{
-				entity.Remarks = Convert.ToString("TNTA_SLM_" + inserted.TrUserId);
+				entity.Remarks = Convert.ToString("TNTA_"+ tournament.DistictName + "_" + inserted.TrUserId);
 				await _context.SaveChangesAsync();
 			}
 
