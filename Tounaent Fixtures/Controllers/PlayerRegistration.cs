@@ -566,7 +566,10 @@ label.checkbox-label {{
 		private async Task SendEmailAsync(string toEmail, PlayerViewModel model, string tournamentName, string Remarks, string WeighCatName)
 
 		{
-			var smtpServer = _config["EmailSettings:SmtpServer"];
+            var category = await _context.TblCategory
+                .Where(c => c.CatId == model.CatId && c.IsActive)
+                .FirstOrDefaultAsync();
+            var smtpServer = _config["EmailSettings:SmtpServer"];
 			var port = int.Parse(_config["EmailSettings:Port"]);
 			var fromEmail = _config["EmailSettings:FromEmail"];
 			var fromPassword = _config["EmailSettings:FromPassword"];
@@ -587,7 +590,7 @@ label.checkbox-label {{
 				$"Father Name   : {model.FatherName} <br />" +
 				$"Gender        : {model.Gender} <br />" +
 				$"Date Of Birth : {model.Dob.ToString("dd-MM-yyyy")} <br />" +
-				$"Weigt Category : {model.CategoryName} - {WeighCatName} <br />" +
+				$"Weigt Category : {category.CategoryName} - {WeighCatName} <br />" +
 				$"Local Club Name : {model.ClubName}<br />" +
 				$"Email ID        : {model.Email}<br />" +
 				$"Mobile No       : {model.MobileNo}<br />" +
