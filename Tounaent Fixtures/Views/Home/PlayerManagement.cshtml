@@ -3,6 +3,8 @@
     ViewData["Title"] = "Player Management";
     var selectedTournament = ViewBag.SelectedTournament?.ToString();
     var tournaments = ViewBag.Tournaments as List<SelectListItem>;
+    var selecteddistricts = ViewBag.SelectedDistrict?.ToString();
+    var districts = ViewBag.Districts as List<SelectListItem>;
 }
 
 <h2>Player Management</h2>
@@ -28,12 +30,35 @@
             </select>
         </div>
     </div>
+    <div class="form-group row">
+        <label for="districtId" class="col-sm-2 col-form-label">Filter by District:</label>
+        <div class="col-sm-6">
+            <select id="districtId" name="districtId" class="form-control" onchange="this.form.submit()">
+                <option value="">-- All Districts --</option>
+                @foreach (var district in districts)
+                {
+                    if (district.Value == selecteddistricts)
+                    {
+                        <option value="@district.Value" selected>@district.Text</option>
+
+                    }
+                    else
+                    {
+                        <option value="@district.Value">@district.Text</option>
+
+                    }
+                }
+            </select>
+        </div>
+    </div>
 </form>
 
 <form asp-controller="Home" asp-action="ExportPlayerToExcel" method="post" style="display:inline;">
     <input type="hidden" name="tournamentId" value="@ViewBag.SelectedTournament" />
+    <input type="hidden" name="districtId" value="@ViewBag.SelectedDistrict" />
     <button type="submit" class="btn btn-outline-success mb-3">Export to Excel</button>
 </form>
+
 
 <table id="playerTable" class="table table-bordered display">
     <thead class="thead-dark">

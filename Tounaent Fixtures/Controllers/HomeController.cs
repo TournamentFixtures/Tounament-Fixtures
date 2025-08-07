@@ -32,7 +32,7 @@ namespace Tounaent_Fixtures.Controllers
             var districts = await _context.TblDistricts.ToListAsync();
             return View(districts);
         }
-        public async Task<IActionResult> PlayerManagement(int? tournamentId)
+        public async Task<IActionResult> PlayerManagement(int? tournamentId, int? districtid)
         {
             // Load tournament dropdown
             ViewBag.Tournaments = await _context.TblTournament
@@ -42,17 +42,25 @@ namespace Tounaent_Fixtures.Controllers
                     Text = t.TournamentName
                 })
                 .ToListAsync();
-
+            ViewBag.Districts = await _context.TblDistricts
+                .Select(t => new SelectListItem
+                {
+                    Value = t.DistictId.ToString(),
+                    Text = t.DistictName
+                })
+                .ToListAsync();
             // Store selected tournament in ViewBag to highlight selected option in view
             ViewBag.SelectedTournament = tournamentId;
+            ViewBag.SelectedDistrict = districtid;
 
             // Query players with optional filter
             var playersQuery = _context.TblTournamentUserRegs.Where(p=> p.IsActive == true).AsQueryable();
 
             if (tournamentId.HasValue)
-            {
                 playersQuery = playersQuery.Where(p => p.TrId == tournamentId.Value);
-            }
+
+            if (districtid.HasValue)
+                playersQuery = playersQuery.Where(p => p.DistrictId == districtid.Value);
 
             // Project to PlayerExportViewModel
             var players = await playersQuery
@@ -213,9 +221,19 @@ namespace Tounaent_Fixtures.Controllers
             return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Gender.xlsx");
         }
 
-        public async Task<IActionResult> ExportPlayerToExcel()
+        public async Task<IActionResult> ExportPlayerToExcel(int? tournamentId, int? districtId)
         {
-            var players = await _context.TblTournamentUserRegs
+            var playersQuery = _context.TblTournamentUserRegs
+                .Where(p => p.IsActive == true)
+                .AsQueryable();
+
+            if (tournamentId.HasValue)
+                playersQuery = playersQuery.Where(p => p.TrId == tournamentId.Value);
+
+            if (districtId.HasValue)
+                playersQuery = playersQuery.Where(p => p.DistrictId == districtId.Value);
+            
+            var players = await playersQuery
                     .Select(p => new PlayerExportViewModel
                     {
                         TrUserId = p.TrUserId,
