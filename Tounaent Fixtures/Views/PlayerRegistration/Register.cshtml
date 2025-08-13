@@ -1,7 +1,16 @@
 ﻿@model Tounaent_Fixtures.Models.PlayerViewModel
 
 @{
-    ViewData["Title"] = "Online Registration -" + @ViewData["TournamentName"];
+    string Title = "Online Registration -" + @ViewData["TournamentName"];
+    if (Model.TournamentId == 16)
+    {
+        Title = Title + " - Thiruvarur (Sub Junior & Cadet)";
+    }
+    else if (Model.TournamentId == 17)
+    {
+        Title = Title + " - Thanjavur (Junior & Senior)";
+    }
+    ViewData["Title"] = Title;
     ViewData["HideNavigation"] = true;
 }
 
