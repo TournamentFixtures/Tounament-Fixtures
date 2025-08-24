@@ -90,6 +90,10 @@ namespace Tounaent_Fixtures.Controllers
 				DistrictOptions = await GetDistrictsAsync(),
 				ClubOptions = await GetClubsByDistrict((int)tournament.DistictId)
 			};
+			if (tournament.MatchType == "State")
+			{
+				model.DistictId = 0;
+			}
 
 			return View(model);
 		}
